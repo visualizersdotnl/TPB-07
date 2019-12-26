@@ -163,6 +163,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\LICENSE" />
+    <None Include="..\README.md" />
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-shader.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-Melting-cubes-buffer-A.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-Radial-blur.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor-cubemap.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-Metaballs-buffer-A.shadertoy" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Timeline.txt" />
+    <Text Include="..\to-do.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

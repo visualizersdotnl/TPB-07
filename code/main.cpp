@@ -4,6 +4,11 @@
 
 	Yup, OpenGL.
 
+	Shader source links (Shadertoy):
+	- Cracktro: https://www.shadertoy.com/view/Wl33WS
+	- Caged balls: https://www.shadertoy.com/view/Wt3GWB
+	- Trevor: https://www.shadertoy.com/view/Wtc3DB
+
 	I swear that I will:
 	- Not overengineer a single bit
 	- Don't give a fuck about how the code looks
@@ -15,6 +20,7 @@
 	  + Loading shader from text, *or*, integrating it as a long string! :)
 	  + Try to use a render target
 	  + If this all works: try to get Trevor's shader to work
+	  + Now build a basic 2D sprite draw system (doesn't SDL do this for you?)
 	  + Play some music (use BASS)
 	  + Integrate GNU Rocket
 

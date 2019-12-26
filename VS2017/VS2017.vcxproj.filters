@@ -16,6 +16,12 @@
     <Filter Include="/3rdparty libraries %28x64 only%29">
       <UniqueIdentifier>{4e473da7-1b71-4c8f-b300-425b23758716}</UniqueIdentifier>
     </Filter>
+    <Filter Include="/Shadertoy backups">
+      <UniqueIdentifier>{dd5dd3a2-cb56-4ef2-adb4-7d7afb94948b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Notes">
+      <UniqueIdentifier>{3ca40e3e-e6f0-49b2-aa8b-fb678e458810}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\code\main.cpp">
@@ -32,5 +38,37 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-shader.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Melting-cubes-buffer-A.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Radial-blur.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor-cubemap.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-Metaballs-buffer-A.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\LICENSE">
+      <Filter>Notes</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>Notes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Timeline.txt">
+      <Filter>Notes</Filter>
+    </Text>
+    <Text Include="..\to-do.txt">
+      <Filter>Notes</Filter>
+    </Text>
   </ItemGroup>
 </Project>
