@@ -1,0 +1,449 @@
+
+// Superplek ft. Thorsten @ #HWSHADERGP19 round #1
+// Backup effect for TPB-07
+
+// -- Taken from newer shader(s) --
+
+#define sat(x) clamp(x,0.0,1.0)
+
+// Thanks, Trevor!
+// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+vec3 ACESFilm(vec3 x)
+{
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return sat((x*(a*x+b))/(x*(c*x+d)+e));
+}
+
+// One of my own; I derived it from NTSC weights as far as I can remember
+vec3 fDesaturate(vec3 color, float amount)
+{
+    return mix(color, vec3(dot(color, vec3((1.-(0.21+0.71)), 0.21, 0.71))), amount);
+}
+
+// Trevor's function
+vec3 fVignette(vec3 color, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord/iResolution.xy;
+    uv *=  1. - uv.yx;
+    float vignetting = uv.x*uv.y * 25.;
+    vignetting = sat(pow(vignetting, .25));
+    return color*vignetting;
+}
+
+// -- HWGP shader --
+
+float laura(vec3 p)
+{
+    float cosgrid = cos(p.x)+cos(p.y*0.8)+cos(p.z);
+    
+    // ** this was in the plans but now that I look at it, well, doesn't do a whole lot of good **
+    // Blobs (optional, just remember p-offset, like with normals, then 1/dist per axis)
+    vec3 dx = p-vec3(1.,0.3*cos(iTime*0.5),0.);
+    vec3 dy = p-vec3(0.,1.,0.);
+    vec3 dz = p-vec3(0.,0., 1. + .08*sin(iTime*0.3));
+    float bx = 1./length(dx);
+    float by = 0.8/length(dy);
+    float bz = 0.8/length(dz);
+    
+    float result = cosgrid+bx*by*bz; // GRID+X*Y+Z = GOOD!
+    return result;
+}
+
+mat2 laurarot(float theta)
+{
+    return mat2(cos(theta), sin(theta), -sin(theta), cos(theta));
+}
+                
+vec3 lauranormal(vec3 p)
+{                    
+    float mid = laura(p);
+    float eps = 0.1;
+    vec3 normal;
+    normal.x = laura(vec3(p.x+eps, p.y, p.z))-mid;
+    normal.y = laura(vec3(p.x, p.y+eps, p.z))-mid;
+    normal.z = laura(vec3(p.x, p.y, p.z+eps))-mid;
+    return normalize(normal);
+}
+
+vec3 laurapath(float time)
+{
+    return vec3(0.4*sin(time), 0.3*cos(time*0.3), time*4.);
+}
+
+// Try to memorize this equation
+float lauraspec(vec3 eye, vec3 hit, vec3 normal, vec3 ldir)
+{
+    vec3 v = normalize(eye-hit);
+    vec3 h = normalize(ldir+v);
+    float spec = pow(max(dot(normal, h), 0.), 8.);
+    return spec;
+}
+
+// -- Disregard this one --
+float laurapoint(vec3 hit, vec3 lpos, vec3 normal)
+{
+    float distance = length(hit-lpos);
+    vec3 dir = normalize(lpos);
+    
+    float constant = 0.1;
+    float linear = 0.5;
+    float exp = 2.;
+    
+    float att = constant + linear*distance + exp*distance*distance;
+    return 1./att;
+}
+
+float random(float t)
+{
+    return 0.23423423*sin(t*4.23423);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    // Calculate P which is [-1..1] on 2 axis
+    vec2 uv = fragCoord/iResolution.xy;
+    vec2 p = -1. + 2. * fragCoord.xy/iResolution.xy;
+
+    // Final color (RGB), reset
+    vec3 col = vec3(0.);
+    
+    // Eye position
+    vec3 eye = laurapath(iTime);
+    
+    // Main direction vector
+    vec3 dir = vec3(p.x, p.y, 1.);
+    
+    // Rotate that vector
+    // ** SYNC **
+    mat2 mrot1 = laurarot(iTime*0.4);
+    mat2 mrot2 = laurarot(iTime*0.23);
+    dir.yx *= mrot1;
+    dir.zy *= mrot2;
+    dir =  normalize(dir);
+    
+    // Light position (REMEMBER: add eye pos.)    
+    vec3 lpos = vec3(dir.x, dir.y, 0.);
+    lpos += eye;
+    
+    // March shape + calculate normal 
+    float total = 0.;
+    float march;
+    vec3 hit = vec3(0.);
+    for (int i = 0; i < 96; ++i)
+    {
+        march = laura(hit);
+        total += march;
+        hit = eye + dir*total;
+    }
+    
+    vec3 normal = lauranormal(hit);
+
+    // March reflection (copy paste from previous march)
+    vec3 reflhit = hit;
+    float refltotal = total; // IMPORTANT: do *not* set to 0!
+    vec3 refldir = reflect(dir, normal); // IMPORTANT: order matters! DIR, NORMAL!
+    vec3 refleye = hit;
+    for (int i = 0; i < 96; ++i)
+    {
+        float march = laura(reflhit);
+        refltotal += march; 
+        reflhit = refleye + refldir*refltotal;
+    }
+
+    vec3 r_normal = lauranormal(reflhit);
+
+    // Lighting for reflection
+    vec3 r_ldir = normalize(lpos-reflhit);
+    float r_diffuse = max(0., dot(r_normal, r_ldir));
+    float r_fresnel = pow(max(0., dot(r_normal, r_ldir)), 24.);
+
+    // Main color
+    vec3 albedo = vec3(.1, .1 , 0.4);
+
+    // Lighting for main shape
+    vec3 ldir = normalize(lpos-hit);
+    float diffuse = max(0., dot(normal, ldir));
+//    float fresnel = pow(max(0., dot(normal, ldir)), 24.);
+    float fresnel = lauraspec(eye, hit, normal, ldir);
+    
+    // Rim lighting (IMPORTANT)
+    float rim = diffuse*diffuse;
+    rim = clamp((rim-0.13)*16., 0., 1.);
+
+    // This is a powerful part, easy to memorize, just recalculate the normal
+    // using hit position and wobble it, then use it to influence yMod for stripes
+    vec3 funk = lauranormal(hit + cos(iTime*0.3));
+    float ymod = 0.5 + 0.5*sin(hit.y*14. + funk.x*22. + funk.y+cos(iTime*0.4));
+    diffuse *= ymod;
+    ymod *= 0.5;
+    ymod *= ymod;
+    diffuse += ymod;
+    // ^ Many variations of this work
+ 
+    // Lighting: just set to diffuse, then add diffuse*rim, add fresnel and mix
+    // with reflection albedo*diffuse*fresnel*ymod based on a factor of sorts
+    col = albedo*diffuse;
+    col += albedo*diffuse*rim;
+    col += fresnel;
+    col = mix(col, albedo*r_diffuse*r_fresnel*ymod, rim*diffuse);
+    
+    // Ambient
+    col += vec3(0.1, 0.1, 0.1);
+    
+    // Add fog (can colorize without artifacts)
+    float fog = 1.-(exp(-0.01*total*total));
+    col = mix(col, vec3(0.5, 0.06, 0.05), fog); // COLOR YOUR FOG!
+    
+    // Use new vignette
+    col = fVignette(col, fragCoord);
+    
+
+    // Interlace
+    float inter = mod(fragCoord.y, 2.);
+    if (inter > 1.)
+        col *= 0.36+r_fresnel; // THIS LOOKS SEXY!
+
+    // Toning
+    col = col*0.2 + 0.8*ACESFilm(col);
+    col = fDesaturate(col, 1.54);
+    
+    //col.xyz = vec3(r_fresnel);
+    
+    // Flash: disabled (FIXME?)
+    vec3 flash = vec3(0.7);
+    float flash_t = mod(iTime*0.9, 1.);
+    flash_t = pow(flash_t, 1.2);
+    flash_t = 1.-flash_t;
+    // col = mix(col, flash, flash_t);
+    
+    // Output to screen
+    fragColor = vec4(col,1.0);
+
+// Superplek ft. Thorsten @ #HWSHADERGP19 round #1
+// Backup effect for TPB-07
+
+// -- Taken from newer shader(s) --
+
+#define sat(x) clamp(x,0.0,1.0)
+
+// Thanks, Trevor!
+// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+vec3 ACESFilm(vec3 x)
+{
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return sat((x*(a*x+b))/(x*(c*x+d)+e));
+}
+
+// One of my own; I derived it from NTSC weights as far as I can remember
+vec3 fDesaturate(vec3 color, float amount)
+{
+    return mix(color, vec3(dot(color, vec3((1.-(0.21+0.71)), 0.21, 0.71))), amount);
+}
+
+// Trevor's function
+vec3 fVignette(vec3 color, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord/iResolution.xy;
+    uv *=  1. - uv.yx;
+    float vignetting = uv.x*uv.y * 25.;
+    vignetting = sat(pow(vignetting, .25));
+    return color*vignetting;
+}
+
+// -- HWGP shader --
+
+float laura(vec3 p)
+{
+    float cosgrid = cos(p.x)+cos(p.y*0.8)+cos(p.z);
+    
+    // ** this was in the plans but now that I look at it, well, doesn't do a whole lot of good **
+    // Blobs (optional, just remember p-offset, like with normals, then 1/dist per axis)
+    vec3 dx = p-vec3(1.,0.3*cos(iTime*0.5),0.);
+    vec3 dy = p-vec3(0.,1.,0.);
+    vec3 dz = p-vec3(0.,0., 1. + .08*sin(iTime*0.3));
+    float bx = 1./length(dx);
+    float by = 0.8/length(dy);
+    float bz = 0.8/length(dz);
+    
+    float result = cosgrid+bx*by*bz; // GRID+X*Y+Z = GOOD!
+    return result;
+}
+
+mat2 laurarot(float theta)
+{
+    return mat2(cos(theta), sin(theta), -sin(theta), cos(theta));
+}
+                
+vec3 lauranormal(vec3 p)
+{                    
+    float mid = laura(p);
+    float eps = 0.1;
+    vec3 normal;
+    normal.x = laura(vec3(p.x+eps, p.y, p.z))-mid;
+    normal.y = laura(vec3(p.x, p.y+eps, p.z))-mid;
+    normal.z = laura(vec3(p.x, p.y, p.z+eps))-mid;
+    return normalize(normal);
+}
+
+vec3 laurapath(float time)
+{
+    return vec3(0.4*sin(time), 0.3*cos(time*0.3), time*4.);
+}
+
+// Try to memorize this equation
+float lauraspec(vec3 eye, vec3 hit, vec3 normal, vec3 ldir)
+{
+    vec3 v = normalize(eye-hit);
+    vec3 h = normalize(ldir+v);
+    float spec = pow(max(dot(normal, h), 0.), 8.);
+    return spec;
+}
+
+// -- Disregard this one --
+float laurapoint(vec3 hit, vec3 lpos, vec3 normal)
+{
+    float distance = length(hit-lpos);
+    vec3 dir = normalize(lpos);
+    
+    float constant = 0.1;
+    float linear = 0.5;
+    float exp = 2.;
+    
+    float att = constant + linear*distance + exp*distance*distance;
+    return 1./att;
+}
+
+float random(float t)
+{
+    return 0.23423423*sin(t*4.23423);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    // Calculate P which is [-1..1] on 2 axis
+    vec2 uv = fragCoord/iResolution.xy;
+    vec2 p = -1. + 2. * fragCoord.xy/iResolution.xy;
+
+    // Final color (RGB), reset
+    vec3 col = vec3(0.);
+    
+    // Eye position
+    vec3 eye = laurapath(iTime);
+    
+    // Main direction vector
+    vec3 dir = vec3(p.x, p.y, 1.);
+    
+    // Rotate that vector
+    // ** SYNC **
+    mat2 mrot1 = laurarot(iTime*0.4);
+    mat2 mrot2 = laurarot(iTime*0.23);
+    dir.yx *= mrot1;
+    dir.zy *= mrot2;
+    dir =  normalize(dir);
+    
+    // Light position (REMEMBER: add eye pos.)    
+    vec3 lpos = vec3(dir.x, dir.y, 0.);
+    lpos += eye;
+    
+    // March shape + calculate normal 
+    float total = 0.;
+    float march;
+    vec3 hit = vec3(0.);
+    for (int i = 0; i < 96; ++i)
+    {
+        march = laura(hit);
+        total += march;
+        hit = eye + dir*total;
+    }
+    
+    vec3 normal = lauranormal(hit);
+
+    // March reflection (copy paste from previous march)
+    vec3 reflhit = hit;
+    float refltotal = total; // IMPORTANT: do *not* set to 0!
+    vec3 refldir = reflect(dir, normal); // IMPORTANT: order matters! DIR, NORMAL!
+    vec3 refleye = hit;
+    for (int i = 0; i < 96; ++i)
+    {
+        float march = laura(reflhit);
+        refltotal += march; 
+        reflhit = refleye + refldir*refltotal;
+    }
+
+    vec3 r_normal = lauranormal(reflhit);
+
+    // Lighting for reflection
+    vec3 r_ldir = normalize(lpos-reflhit);
+    float r_diffuse = max(0., dot(r_normal, r_ldir));
+    float r_fresnel = pow(max(0., dot(r_normal, r_ldir)), 24.);
+
+    // Main color
+    vec3 albedo = vec3(.1, .1 , 0.4);
+
+    // Lighting for main shape
+    vec3 ldir = normalize(lpos-hit);
+    float diffuse = max(0., dot(normal, ldir));
+//    float fresnel = pow(max(0., dot(normal, ldir)), 24.);
+    float fresnel = lauraspec(eye, hit, normal, ldir);
+    
+    // Rim lighting (IMPORTANT)
+    float rim = diffuse*diffuse;
+    rim = clamp((rim-0.13)*16., 0., 1.);
+
+    // This is a powerful part, easy to memorize, just recalculate the normal
+    // using hit position and wobble it, then use it to influence yMod for stripes
+    vec3 funk = lauranormal(hit + cos(iTime*0.3));
+    float ymod = 0.5 + 0.5*sin(hit.y*14. + funk.x*22. + funk.y+cos(iTime*0.4));
+    diffuse *= ymod;
+    ymod *= 0.5;
+    ymod *= ymod;
+    diffuse += ymod;
+    // ^ Many variations of this work
+ 
+    // Lighting: just set to diffuse, then add diffuse*rim, add fresnel and mix
+    // with reflection albedo*diffuse*fresnel*ymod based on a factor of sorts
+    col = albedo*diffuse;
+    col += albedo*diffuse*rim;
+    col += fresnel;
+    col = mix(col, albedo*r_diffuse*r_fresnel*ymod, rim*diffuse);
+    
+    // Ambient
+    col += vec3(0.1, 0.1, 0.1);
+    
+    // Add fog (can colorize without artifacts)
+    float fog = 1.-(exp(-0.01*total*total));
+    col = mix(col, vec3(0.5, 0.06, 0.05), fog); // COLOR YOUR FOG!
+    
+    // Use new vignette
+    col = fVignette(col, fragCoord);
+    
+
+    // Interlace
+    float inter = mod(fragCoord.y, 2.);
+    if (inter > 1.)
+        col *= 0.36+r_fresnel; // THIS LOOKS SEXY!
+
+    // Toning
+    col = col*0.2 + 0.8*ACESFilm(col);
+    col = fDesaturate(col, 1.54);
+    
+    //col.xyz = vec3(r_fresnel);
+    
+    // Flash: disabled (FIXME?)
+    vec3 flash = vec3(0.7);
+    float flash_t = mod(iTime*0.9, 1.);
+    flash_t = pow(flash_t, 1.2);
+    flash_t = 1.-flash_t;
+    // col = mix(col, flash, flash_t);
+    
+    // Output to screen
+    fragColor = vec4(col,1.0);
+}
