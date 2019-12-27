@@ -207,8 +207,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float r_fresnel = pow(max(0., dot(r_normal, r_ldir)), 24.);
 
     // Main color
-    vec3 albedo = vec3(.1, .1 , 0.1);
-
+    vec3 albedo =vec3(0.7, 0.3, 0.2);
+        
     // Lighting for main shape
     vec3 ldir = normalize(lpos-hit);
     float diffuse = max(0., dot(normal, ldir));
@@ -224,7 +224,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec3 funk = lauranormal(hit + cos(time*0.3));
     float ymod = 0.5 + 0.5*sin(hit.y*14. + funk.x*22. + funk.y+cos(time*0.4));
     diffuse *= ymod;
-    ymod *= 0.5;
+    ymod *= 0.628;
     ymod *= ymod;
     diffuse += ymod;
     // ^ Many variations of this work
@@ -240,24 +240,23 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     col += vec3(0.1, 0.1, 0.1);
     
     // Add fog (can colorize without artifacts)
-    float fog = 1.-(exp(-0.01*total*total));
-    col = mix(col, vec3(0.5, 0.06, 0.05), fog); // COLOR YOUR FOG!
+    float fog = 1.-(exp(-0.006*total*total));
+    col = mix(col, vec3(0., 0., 0.), fog); // COLOR YOUR FOG!
 	
-    // Use new vignette
-    col = fVignette(col, fragCoord);
-    
-
     // Interlace
     float inter = mod(fragCoord.y, 2.);
     if (inter > 1.)
         col *= 0.36+r_fresnel; // THIS LOOKS SEXY!
 
     // Toning
-    col = col*0.2 + 0.8*ACESFilm(col);
-    col = fDesaturate(col, 1.24);
+    col = col*0.3 + 0.7*ACESFilm(col);
+    col = fDesaturate(col, 1.34);
     
     //col.xyz = vec3(r_fresnel);
-    
+
+    // Use new vignette
+    col = fVignette(col, fragCoord);
+
     // Flash: disabled (FIXME?)
     vec3 flash = vec3(0.7);
     float flash_t = mod(time*0.9, 1.);

@@ -25,7 +25,7 @@
 #define AO_ITER 8
 
 // Shadertoy-specific (FIXME: add iResolution!)
-#define time (iTime*.8)
+#define time (iTime*1.2)
 
 // -- Function(s) taken from HG_SDF --
 
