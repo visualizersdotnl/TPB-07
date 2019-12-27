@@ -1,12 +1,12 @@
 
 /*
-    TPB-07 effect
+	TPB-07 effect
 
-    by Trevor/PB
-    All edits by Superplek are marked with "SUPERPLEK" :-)
+	by Trevor/PB
+	All edits by Superplek are marked with "SUPERPLEK" :-)
 
-    Note to self (Superplek): study this more carefully and ask Trevor more questions, there's
-    stuff in here I'd like to learn a little more about!
+	Note to self (Superplek): study this more carefully and ask Trevor more questions, there's
+	stuff in here I'd like to learn a little more about!
 */
 
 /*
@@ -28,8 +28,8 @@ vec3 fDesaturate(vec3 color, float amount)
     return mix(color, vec3(dot(color, vec3((1.-(0.21+0.71)), 0.21, 0.71))), amount);
 }
 
-// #define REFLECTIONS
-#define FAR 40.0
+//#define REFLECTIONS
+#define FAR 30.0
 #define STEPS 128
 #define REFL_FAR 33.0
 #define REFL_STEPS 32
@@ -46,11 +46,11 @@ float SDF(vec3 p, out vec4 m)
     pR(p.xy, sin(p.z * 0.5) + p.z * 0.1 - cos(p.z * 0.3));
     // TODO: I suspect ss and I are completely redundant, just I = 0 and let's go
     // vec2 ss = sign(p.xy); // identify each chain uniquely
-    float I = 0.; // <SUPERPLEK> (max(0.0, ss.x) + max(0.0, ss.y) * 2.0) ; // based on the chain create a single unique float 0,1,2,3
-    float T = time; // <SUPERPLEK> iTime * 0.5 + I * 0.25; // animate the chain over time, with offsets per index, TODO: hard to see because of camera movement, maybe just delete?
+    // float I = 0.; // <SUPERPLEK> (max(0.0, ss.x) + max(0.0, ss.y) * 2.0) ; // based on the chain create a single unique float 0,1,2,3
+    float T = time*0.628; // <SUPERPLEK> iTime * 0.5 + I * 0.25; // animate the chain over time, with offsets per index, TODO: hard to see because of camera movement, maybe just delete?
     
     // SUPERPLEK: remember this trick!
-    T = smoothstep(0.2, 0.8, fract(T)) + floor(T); // this trik makes the time progress with smooth steps between each second
+    T = smoothstep(0.2, 0.9, fract(T)) + floor(T); // this trik makes the time progress with smooth steps between each second
     
     
     p.z += T; // animate the chain over time
@@ -58,15 +58,15 @@ float SDF(vec3 p, out vec4 m)
     
     // <SUPERPLEK> I don't want sh*t intersecting with my beautiful marble tiling
     //p.xy -= 1.1 + sin(p.z * 0.25) * 0.1; // move the chain 1.1 out of the center with a bit mover or a bt less over Z (the sin part)
-    p.xy -= 0.92 + 0.1*sin(p.z*0.25);
+    p.xy -= 0.85 + 0.1*sin(p.z*0.25);
     
     pR(p.xy, p.z * 0.1); // rotate based on Z = twist everything into the depth
     p.z = fract(p.z) - 0.5; // repeat in Z axis
-    float r = length(vec2(length(p.xz) - 0.2 /* SUPERPLEK */, p.y)) - 0.1; // draw a torus
+    float r = length(vec2(length(p.xz) - 0.3 /* SUPERPLEK */, p.y)) - 0.1; // draw a torus
     m = vec4(p, 0.0); // set a default material
     p.z = abs(p.z); // our torus fits within 1 grid cell, we're gonna draw another one half a grid cell away and mirrored
     p.z -= 0.5; // this is moving it half a grid cell, mirroring above with abs creates links that connect perfectly
-    float ir = length(vec2(length(p.yz) - 0.2 /* SUPERPLEK */, p.x)) - 0.1; // draw a second torus to make a chain
+    float ir = length(vec2(length(p.yz) - 0.3 /* SUPERPLEK */, p.x)) - 0.1; // draw a second torus to make a chain
     r = Min(r, ir, m, vec4(p, 0.0));
     r *= 0.8; // bias against glithces, remove this for more perf but shittier visuals
     
@@ -161,28 +161,28 @@ struct ShadowArgs
     int steps;
 };
 // ShadowArgs shadowArgs(){return ShadowArgs(0.1,100.0,128.0,32);}
-ShadowArgs shadowArgs(){return ShadowArgs(0.1,100.0,64.0,96);} // <SUPERPLEK>
+ShadowArgs shadowArgs(){return ShadowArgs(0.1,FAR,44.0,96);} // <SUPERPLEK>
 
 // Basic soft shadow function from http://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm
 float Shadow(vec3 ro, vec3 rd, ShadowArgs shadow)
 {
     float dist = shadow.near;
-    float atten = 1.0;
-    for(int i = 0; i < shadow.steps; ++i)
-    {
+	float atten = 1.0;
+	for(int i = 0; i < shadow.steps; ++i)
+	{
         #ifdef SHADOW_CASTER
-        float sampl = fShadowCaster(ray.origin + ray.direction * dist);
-        #else
-        float sampl = SDF(ro + rd * dist);
+		float sampl = fShadowCaster(ray.origin + ray.direction * dist);
+		#else
+		float sampl = SDF(ro + rd * dist);
         #endif
-        if(sampl<0.001)
-            return 0.0;
-        if(dist > shadow.far)
-            return atten;
-        atten = min(atten, shadow.hardness * sampl / dist);
-        dist += sampl;
-    }
-    return atten;
+		if(sampl<0.001)
+			return 0.0;
+		if(dist > shadow.far)
+			return atten;
+		atten = min(atten, shadow.hardness * sampl / dist);
+		dist += sampl;
+	}
+	return atten;
 }
 
 #define PI 3.14159265359
@@ -221,7 +221,7 @@ vec3 AmbientLight(LightData data, vec3 color)
 
 vec3 RimLight(LightData data, vec3 color, float power)
 {
-    return pow(min(1.0 + dot(data.normal, data.rayDirection), 1.0), power) * AmbientLight(data, color);
+	return pow(min(1.0 + dot(data.normal, data.rayDirection), 1.0), power) * AmbientLight(data, color);
 }
 
 // Core lighting function.
@@ -316,7 +316,7 @@ Material marble_black(vec2 uv)
 {
     uv += perlin(floor(uv)*0.01)*19.19;
     
-    Material result;
+	Material result;
     result.albedo = 0.3 * sat(vec3(smoothstep(0.55, 0.9, perlin(perlin(uv * 0.1 + 0.11)*vec2(0.6)+uv*0.002-0.44)) + perlin(uv+0.32+perlin(uv-0.19)*0.25) * 0.25));
     result.specular = 0.025;
     result.roughness = 0.1;
@@ -329,7 +329,7 @@ Material marble_white(vec2 uv)
 {
     uv += perlin(floor(uv)*0.01)*19.19;
     
-    Material result;
+	Material result;
     result.albedo = mix(vec3(1.0), vec3(0.5, 0.4, 0.4), perlin(perlin(uv * 0.1 - 0.11)*vec2(0.6)+uv*0.02));
     result.albedo -= 0.4 * smoothstep(0.5, 0.8, perlin(perlin(uv*0.05+0.3)*vec2(1.0)+0.1));
     result.specular = 0.1;
@@ -356,35 +356,35 @@ Material purpleCloth(vec3 m)
 {
     float threading = sin(m.x * 128.0) * 0.5 + 0.5;
     
-    // <SUPERPLEK> tweaked for fDesaturate() inversion
-    return Material(vec3(0.5, 0.9, 0.2), vec3(0.0), threading * 0.3 + 0.05, 0.06, 1.0); 
+    // <SUPERPLEK> tweaked for fDesaturate() inversion (ergo inverted colors)
+    return Material(vec3(0.5, 0.9, 0.2), vec3(0.0), threading * 0.3 + 0.05, 0.09, 1.0); 
 }
 
 Material GetMaterial(vec4 m, vec3 p)
 {
     Material mtl;
     if(m.w==0.0)
-        mtl = gold(m.xyz);
+    	mtl = gold(m.xyz);
     else if(m.w == 1.0)
-        mtl = purpleCloth(m.xyz);
+    	mtl = purpleCloth(m.xyz);
     else if(m.w == 2.0)
     {
-        mtl = marble_white(m.yz * 2.0);
+    	mtl = marble_white(m.yz * 2.0);
     }
     else if(m.w == 3.0  || m.w == 4.0)
-        mtl = marble_black(m.yz);
+    	mtl = marble_black(m.yz);
     else
-        mtl = marble_checker(m.xz);
-    return mtl;
+    	mtl = marble_checker(m.xz);
+	return mtl;
 }
 
 // <SUPERPLEK> stuff flickers here!
 vec3 Lighting(LightData data, vec3 ro)
 {
-    vec3 cd = vec3(0.0);
+	vec3 cd = vec3(0.0);
     
     cd += AmbientLight(data, vec3(0.015, 0.015, 0.01));
-    cd += RimLight(data, vec3(0.02, 0.02, 0.04), 3.0);
+	cd += RimLight(data, vec3(0.02, 0.02, 0.04), 3.0);
     
     // <SUPERPLEK> here's your lighting snafu, je kunt niet zomaar door die geometry heen gaan casten en doen, wordt 1 kolerezooi
 //    cd += PointLight(data, ro + vec3(1.0, 1.0, 8.0), vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
@@ -406,10 +406,10 @@ vec3 Lighting(LightData data, vec3 ro)
 vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far, out vec3 p, out vec3 n, out float fog, out vec3 s, out vec3 bg)
 {
     float d = Trace(ro, rd, steps, far);
-    bg = vec3(1.); // <SUPERPLEK> doesn't add much.. mix(vec3(1., 1., 1.), vec3(0.0), sqrt(abs(rd.y)));
-    fog = sat(d/(FAR-10.)); // SUPERPLEK: more fog
-    if(fog == 1.0)
-        return vec3(0.0);
+	bg = mix(vec3(0.5, 0.9, 0.2)*0.4, vec3(0.0), sqrt(abs(rd.y))); // <SUPERPLEK>
+    fog = 1.-(exp(-0.00314*d*d*d)); // sat(d/(FAR*0.6)); // <SUPERPLEK>
+    //if(fog == 1.0)
+    //    return vec3(0.0);
     fog = fog*fog;
     p = ro + rd * d;
     n = Gradient(p);
@@ -418,13 +418,13 @@ vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far, out vec3 p, out vec3 
     Material mtl = GetMaterial(m, p);
     s = mtl.specular * mix(vec3(1.0), mtl.albedo, mtl.metallicity);
     LightData data = LightData(rd, n, p, mtl, 1.0);
-    return Lighting(data, ro) + mtl.emissive;
+	return Lighting(data, ro) + mtl.emissive;
 }
 vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far)
 {
     vec3 p,n,bg,s;
     float fog;
-    vec3 fg = TraceAndShade(ro,rd,steps,far,p,n,fog,s,bg);
+   	vec3 fg = TraceAndShade(ro,rd,steps,far,p,n,fog,s,bg);
     return mix(fg, bg, fog);
 }
 // https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
@@ -447,11 +447,11 @@ vec3 LinearToSRGB(vec3 rgb)
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     vec2 uv = (fragCoord * 2.0 - iResolution.xy) / iResolution.y;
-    vec3 ro = vec3(0. /* SUPERPLEK */, .35 /* SUPERPLEK: camera up! */, time * 1.3);
+	vec3 ro = vec3(0. /* SUPERPLEK */, .35 /* SUPERPLEK: camera up! */, time * 2.6);
     vec3 rd = normalize(vec3(uv, /* 1.5 <SUPERPLEK> */ 1.) + vec3(sin(time), cos(time * 0.411), 0.0) * 0.1);
     
-    pR(rd.zy, -0.23);
-    pR(rd.xy, sin(time) * 0.314); // <SUPERPLEK>
+    pR(rd.zy, -0.23); // <SUPERPLEK>
+    pR(rd.xy, sin(time*0.628) * 3.14*0.24); // <SUPERPLEK>
     vec3 bg, p, n, specularColor;
     float fog;
     vec3 fg = TraceAndShade(ro, rd, STEPS, FAR, p, n, fog, specularColor, bg);
@@ -461,23 +461,25 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     fg += mask * specularColor * TraceAndShade(p + reflect(rd, n) * 0.05, reflect(rd, n), REFL_STEPS, REFL_FAR);
 #else
     // I think this sample needs to be ^2.2 due to the image being srgb?
-    // <SUPERPLEK> if you want to be fully correct, yes, but this is all a bit touch & go right? ;)
-    fg += specularColor * texture(iChannel2, reflect(rd, n)).xyz * 0.1;
+    // <SUPERPLEK> if you want to be fully correct, yes
+    vec3 tex = texture(iChannel2, reflect(rd, n)).xyz;
+    fg += specularColor * tex * 0.3; // texture(iChannel2, reflect(rd, n)).xyz * 0.1;
 #endif
     
     // tone mapping
-    vec3 cd = mix(fg, bg, fog);
-    cd = cd*0.4 + 0.6*ACESFilm(max(cd, 0.0));
-    cd = LinearToSRGB(cd);
+    vec3 cd = mix(fg, bg, pow(fog,3.14));
+	cd = LinearToSRGB(cd);
+    cd = cd*0.2 + 0.8*ACESFilm(cd); // max(cd, 0.0)); // <SUPERPLEK>
     
-    cd = fDesaturate(cd, 1.22); // <SUPERPLEK> inverts colors more or less :)
+    
+    cd = fDesaturate(cd, 1.314); // <SUPERPLEK> inverts colors more or less :)
    
     // vignette
     uv = fragCoord/iResolution.xy;
     uv *=  1.0 - uv.yx;
     float vig = uv.x*uv.y * 25.0;
     vig = sat(pow(vig,0.25));
-    cd *= vig;
+	cd *= vig;
     
     fragColor = vec4(cd,1.0);
 }
