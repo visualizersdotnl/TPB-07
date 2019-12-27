@@ -107,11 +107,11 @@ float SDF(vec3 p, out vec4 m)
     
     pR(p.xy, p.z * 0.1); // rotate based on Z = twist everything into the depth
     p.z = fract(p.z) - 0.5; // repeat in Z axis
-    float r = length(vec2(length(p.xz) - 0.3 /* SUPERPLEK */, p.y)) - 0.1; // draw a torus
+    float r = length(vec2(length(p.xz) - 0.3, p.y)) - 0.1; // draw a torus
     m = vec4(p, 0.0); // set a default material
     p.z = abs(p.z); // our torus fits within 1 grid cell, we're gonna draw another one half a grid cell away and mirrored
     p.z -= 0.5; // this is moving it half a grid cell, mirroring above with abs creates links that connect perfectly
-    float ir = length(vec2(length(p.yz) - 0.3 /* SUPERPLEK */, p.x)) - 0.1; // draw a second torus to make a chain
+    float ir = length(vec2(length(p.yz) - 0.3, p.x)) - 0.1; // draw a second torus to make a chain
     r = Min(r, ir, m, vec4(p, 0.0));
     r *= 0.8; // bias against glithces, remove this for more perf but shittier visuals
     
@@ -402,9 +402,9 @@ Material purpleCloth(vec3 m)
     float threading = sin(m.x * 128.0) * 0.5 + 0.5;
     
     // <SUPERPLEK> tweaked for fDesaturate() inversion (ergo inverted colors)
-    return Material(vec3(0.6, 0.9, 0.2), vec3(0.0), threading * 0.3 + 0.05, 0.09, 1.0); 
+    return Material(vec3(0.4, 0.9, 0.2), vec3(0.0), threading * 0.3 + 0.05, 0.09, 1.0); 
 }
-
+	
 Material GetMaterial(vec4 m, vec3 p)
 {
     Material mtl;
@@ -433,9 +433,7 @@ vec3 Lighting(LightData data, vec3 ro)
     
     // <SUPERPLEK> here's your lighting snafu, je kunt niet zomaar door die geometry heen gaan casten en doen, wordt 1 kolerezooi
 //    cd += PointLight(data, ro + vec3(1.0, 1.0, 8.0), vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
-
-    ShadowArgs shadowArgs = shadowArgs();
-    cd += PointLight(data, vec3(.0, .0, 8.0)+ro, vec3(20.0, 17.0, 10.0), 0.0, shadowArgs);
+    cd += PointLight(data, vec3(.0, .0, 8.0)+ro, vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
     
     float spacing = 10.0;
     float tmp = fract(data.worldPos.z / spacing) - 0.5;
@@ -453,8 +451,11 @@ vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far, out vec3 p, out vec3 
     float d = Trace(ro, rd, steps, far);
 	bg = mix(vec3(0.5, 0.9, 0.2)*0.4, vec3(0.0), sqrt(abs(rd.y))); // <SUPERPLEK>
     fog = 1.-(exp(-0.00314*d*d*d)); // sat(d/(FAR*0.6)); // <SUPERPLEK>
+    
+    // <SUPERPLEK> this doesn't seem worth the branching
     //if(fog == 1.0)
     //    return vec3(0.0);
+    
     fog = fog*fog;
     p = ro + rd * d;
     n = Gradient(p);
