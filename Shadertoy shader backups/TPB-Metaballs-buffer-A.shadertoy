@@ -391,7 +391,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
             color = 0.5*color + color*land_of;
 
 			// Somehow I liked this?>                
-            alpha = .4*.6*land_of*(diffuse+specular);
+            alpha = .4 + .6*land_of*(diffuse+specular);
         }
         
         // Apply shadow
