@@ -1,14 +1,2 @@
- -> Fixed by me, yay!
-NYE demo to-do list:
 
-Day 1-2-3
-- At this point it's time for a Github repository
-- Find (or borrow, but DO NOT write yourself) demo system
-- Pester Trevor about performance and glitches -> Fixed by me, yay!
-
-Day 4-10
-- Try to fit this in a demosystem (preferably borrowed), see project!
-
-Day 10-...
-- Design, sync. et cetera.
-
+Everything.

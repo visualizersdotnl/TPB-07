@@ -2,11 +2,10 @@
 /*
 	TPB-07 effect
 
-	by Trevor/PB
-	All edits by Superplek are marked with "SUPERPLEK" :-)
+	by Trevor/PB & Superplek/Bypass
 
 	Note to self (Superplek): study this more carefully and ask Trevor more questions, there's
-	stuff in here I'd like to learn a little more about!
+	some stuff in here I'd like to know a little more about!
 */
 
 /*
@@ -435,7 +434,7 @@ vec3 Lighting(LightData data, vec3 ro)
 //    cd += PointLight(data, ro + vec3(1.0, 1.0, 8.0), vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
     cd += PointLight(data, vec3(.0, .0, 8.0)+ro, vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
     
-    float spacing = 10.0;
+    float spacing = 20.0; // <SUPERPLEK> makes the chain a bit more Quinton 'Rampage' Jackson
     float tmp = fract(data.worldPos.z / spacing) - 0.5;
     data.worldPos.z = tmp * spacing;
     float mask = 1.0 - abs(tmp + tmp);

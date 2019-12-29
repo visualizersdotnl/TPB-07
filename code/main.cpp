@@ -26,20 +26,14 @@
 	  + Play some music (use BASS)
 	  + Integrate GNU Rocket
 
+	Links with information:
+	  + Cubemaps: https://learnopengl.com/Advanced-OpenGL/Cubemaps
+
 	Author of tiny boilerplate I took: https://github.com/koute
 */
 
-#define GL_GLEXT_PROTOTYPES
-
-// OpenGL + SDL
-#include "../3rdparty/glew-2.1.0-win32/glew-2.1.0/include/GL/glew.h"
-#include "../3rdparty/SDL2-devel-2.0.10-VC/SDL2-2.0.10/include/SDL.h"
-#undef main // https://stackoverflow.com/questions/6847360/error-lnk2019-unresolved-external-symbol-main-referenced-in-function-tmainc
-#include "../3rdparty/SDL2-devel-2.0.10-VC/SDL2-2.0.10/include/SDL_opengl.h"
-
-// CRT + STL
-#include <stdio.h>
-#include <string.h>
+#include "main_header.h"
+#include "glsl_loader.h"
 
 typedef float t_mat4x4[16];
 
@@ -95,9 +89,34 @@ typedef enum t_attrib_id
 	attrib_color
 } t_attrib_id;
 
+/*
+volatile uint64_t g_bullshit1;
+volatile uint64_t g_bullshit2;
+
+__declspec(noinline) void upbs2() { ++g_bullshit2; }
+*/
+
 int main( int argc, char * argv[] )
 {
+/*
+	__debugbreak();
+	// because Marco <3 UB
+	for (int i = 0; i < 3; ++i)
+	{
+		++g_bullshit1;
+		upbs2();
+		__debugbreak();
+		for (int j = 0; j < 4; ++j)
+		{
+			upbs2();			
+		}
+	}
+*/
+
+	int retVal = 0;
+
 	SDL_Init( SDL_INIT_VIDEO );
+
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	SDL_GL_SetAttribute( SDL_GL_ACCELERATED_VISUAL, 1 );
 	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 8 );
@@ -118,7 +137,8 @@ int main( int argc, char * argv[] )
 	GLenum err = glewInit();
 	if (0 != err)
 	{
-		fprintf( stderr, "cannot initialize glew\n" );	
+		fprintf( stderr, "initializion of glew failed\n" );	
+		return 1;
 	}
 
 	GLuint vs, fs, program;
@@ -204,7 +224,7 @@ int main( int argc, char * argv[] )
 			{
 				case SDL_KEYUP:
 					if( event.key.keysym.sym == SDLK_ESCAPE )
-						goto cleanup; // Yup, I did this :)
+						return 0;
 					break;
 			}
 		}
@@ -216,7 +236,6 @@ int main( int argc, char * argv[] )
 		SDL_Delay( 1 );
 	}
 
-cleanup:
 	SDL_GL_DeleteContext( context );
 	SDL_DestroyWindow( window );
 	SDL_Quit();

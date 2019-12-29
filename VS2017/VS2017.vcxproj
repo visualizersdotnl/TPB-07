@@ -126,6 +126,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +147,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,7 +159,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\code\glsl_loader.cpp" />
     <ClCompile Include="..\code\main.cpp" />
+    <ClCompile Include="..\code\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\3rdparty\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64\glew32.lib" />
@@ -175,6 +181,11 @@
   <ItemGroup>
     <Text Include="..\Timeline.txt" />
     <Text Include="..\to-do.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\code\glsl_loader.h" />
+    <ClInclude Include="..\code\main_header.h" />
+    <ClInclude Include="..\code\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
