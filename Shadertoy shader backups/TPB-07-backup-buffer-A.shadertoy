@@ -249,7 +249,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
      //  col *= 0.96*r_fresnel; // THIS LOOKS SEXY!
 
     // Toning
-    col = col*0.6 + 0.3*ACESFilm(col);
+    col = col*0.8 + 0.2*ACESFilm(col);
     col = fDesaturate(col, 1.3);
     
     //col.xyz = vec3(r_fresnel);
