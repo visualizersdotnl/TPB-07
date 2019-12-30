@@ -4,7 +4,7 @@
 
 // -- Taken from newer shader(s) --
 
-#define time (iTime*0.4)
+#define time (iTime*0.314*0.5)
 #define sat(x) clamp(x,0.0,1.0)
 
 // Thanks, Trevor!
@@ -116,7 +116,7 @@ vec3 lauranormal(vec3 p)
 
 vec3 laurapath(float t)
 {
-    return vec3(0.4*sin(t), 0.3*cos(t*0.3), t*7.);
+    return vec3(0.4*sin(t*3.), 0.3*cos(t*1.66), t*4.);
 }
 
 // Try to memorize this equation
@@ -207,7 +207,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float r_fresnel = pow(max(0., dot(r_normal, r_ldir)), 16.);
 
     // Main color
-    vec3 albedo =vec3(0.7, 0.3, 0.2);
+    vec3 albedo =vec3(0.2, 0.6, 1.);
         
     // Lighting for main shape
     vec3 ldir = normalize(lpos-hit);
@@ -217,12 +217,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     
     // Rim lighting (IMPORTANT)
     float rim = diffuse*diffuse;
-    rim = clamp((rim-0.13)*16., 0., 1.);
+    rim = clamp((rim-0.13)*32., 0., 1.);
 
     // This is a powerful part, easy to memorize, just recalculate the normal
     // using hit position and wobble it, then use it to influence yMod for stripes
     vec3 funk = lauranormal(hit + cos(time*0.3));
-    float ymod = 0.5 + 0.5*sin(hit.y*14. + funk.x*22. + funk.y+cos(time*0.4));
+    float ymod = 0.5 + 0.5*sin(hit.y*4. + funk.x*22. + funk.y+cos(time*0.4));
     diffuse *= ymod;
     ymod *= 0.628;
     ymod *= ymod;
@@ -249,7 +249,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
      //  col *= 0.96*r_fresnel; // THIS LOOKS SEXY!
 
     // Toning
-//    col = col*0.6 + 0.3*ACESFilm(col);
+    col = col*0.6 + 0.3*ACESFilm(col);
     col = fDesaturate(col, 1.3);
     
     //col.xyz = vec3(r_fresnel);
@@ -258,10 +258,10 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     col = fVignette(col, fragCoord);
 
     // Flash: disabled (FIXME?)
-    vec3 flash = vec3(0.7);
-    float flash_t = mod(time*0.9, 1.);
-    flash_t = pow(flash_t, 1.2);
-    flash_t = 1.-flash_t;
+    //vec3 flash = vec3(0.7);
+    //float flash_t = mod(time*0.9, 1.);
+    //flash_t = pow(flash_t, 1.2);
+    //flash_t = 1.-flash_t;
     // col = mix(col, flash, flash_t);
         
     // Output to screen

@@ -6,11 +6,12 @@
 // Blur inspired by David Hoskins, flares inspired by John Chapman
 //
 // Effect (backup?) for TPB-07
+// Became a bit of a 2D Burra-style 90s thing
 
 #define BLUR_ITERATIONS 32
 #define GOLDEN_ANGLE 2.39996
 
-// -- Taken from newer shader(s) --
+// -- Plek/Trevor's crap --
 
 #define time iTime
 
@@ -33,6 +34,16 @@ mat2 fRot(float theta)
 {
     return mat2(cos(theta), sin(theta), -sin(theta), cos(theta));
 }
+
+// hash functions
+vec4 h4(vec4 p4)
+{
+	p4 = fract(p4 * vec4(.1031, .1030, .0973, .1099));
+    p4 += dot(p4, p4.wzxy + 19.19);
+    return fract((p4.xxyz + p4.yzzw) * p4.zywx);
+}
+
+float h1(vec4 p){return h4(p).x;}
 
 // -- Unity logo --
 
@@ -107,7 +118,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec3 bokeh = Bokeh(iChannel2, uv, 4.0 - vignette * 4.0) * vec3(mixBokeh);
     
     vec2 direction = normalize(vec2(1.0) - uv - vec2(0.5));
-    vec2 aberrated = 0.0114 * pow(direction, vec2(4.0));
+    vec2 aberrated = 0.0084 * pow(direction, vec2(4.0));
 
     vec3 col = vec3(texture(iChannel0, uv - aberrated).r,
                     texture(iChannel0, uv).g,
@@ -120,7 +131,13 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 	vec3 dofColors = col * vec3(mixFlare);
 
-	vec3 finalCol = max(dofColors, bokeh)*vignette;
+	vec3 finalCol3 = max(dofColors, bokeh)*vignette;
     
-    fragColor = vec4(0.3*finalCol + 0.7*ACESFilm(finalCol), 1.0);
+    // shit film grain (by Trevor :))
+    finalCol3 += (h1(vec4(fragCoord.x,fragCoord.y,time,col.z)) - 0.5) * 0.05;
+ 
+    vec4 finalCol4 = vec4(0.3*finalCol3 + 0.7*ACESFilm(finalCol3), 1.0);
+
+    
+    fragColor = finalCol4;
 }

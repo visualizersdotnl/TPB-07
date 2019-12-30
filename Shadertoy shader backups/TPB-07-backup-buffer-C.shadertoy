@@ -3,7 +3,7 @@
 // This pass samples the blurred highlights along a vector crossing the center of the screen
 // I kind of botched the halo but it looked nice so I just left it there
 
-#define NUM_GHOSTS 3
+#define NUM_GHOSTS 4
 #define SPACING 0.4
 #define WEIGHT 6.28
 #define DISTORTION 0.614
