@@ -382,7 +382,7 @@ Material gold(vec3 m)
 {
     // <SUPERPLEK>
     return Material(vec3(0.44, 0.32, 0.31), vec3(0.0), 0.9, 0.1, 1.0, 
-                    0.2 // <TT> Reflection gating
+                    0.1 // <TT> Reflection gating
                    );
 }
 
