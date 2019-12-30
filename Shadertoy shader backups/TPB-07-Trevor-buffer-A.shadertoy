@@ -54,10 +54,10 @@ float SDF(vec3 p, out vec4 m)
     // TODO: I suspect ss and I are completely redundant, just I = 0 and let's go
     // vec2 ss = sign(p.xy); // identify each chain uniquely
     // float I = 0.; // <SUPERPLEK> (max(0.0, ss.x) + max(0.0, ss.y) * 2.0) ; // based on the chain create a single unique float 0,1,2,3
-    float T = time*0.928; // <SUPERPLEK> iTime * 0.5 + I * 0.25; // animate the chain over time, with offsets per index, TODO: hard to see because of camera movement, maybe just delete?
+    float T = time*1.928; // <SUPERPLEK> iTime * 0.5 + I * 0.25; // animate the chain over time, with offsets per index, TODO: hard to see because of camera movement, maybe just delete?
     
     // <SUPERPLEK> remember this trick! + SYNC!
-    T = smoothstep(0.3, 0.9, fract(T)) + floor(T);
+    // T = smoothstep(0.3, 0.9, fract(T)) + floor(T);
     
     
     p.z += T; // animate the chain over time
@@ -381,7 +381,14 @@ Material marble_checker(vec2 uv)
 Material gold(vec3 m)
 {
     // <SUPERPLEK>
-    return Material(vec3(0.44, 0.32, 0.31), vec3(0.0), 0.9, 0.1, 1.0, 
+//    return Material(vec3(0.44, 0.32, 0.31), vec3(0.0), 0.9, 0.1, 1.0, 
+//                    0.1 // <TT> Reflection gating
+//                   );
+    
+    vec3 tex = texture(iChannel2, m.xz).xyz;
+    
+
+    return Material(tex*vec3(.4,.4,.6), vec3(0.), 1., 0.1, 1.0, 
                     0.1 // <TT> Reflection gating
                    );
 }
@@ -549,7 +556,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec3 rd = normalize(vec3(uv, /* 1.5 <SUPERPLEK> */ 1.) + vec3(sin(time), cos(time * 0.411), 0.0) * 0.1);
 	
     // <SUPERPLEK> camera sync.(TODO)
-    pR(rd.xz, PI*smoothstep(-1., 1., sin(0.314*time)));
+    pR(rd.xz, PI*smoothstep(-1., 1., sin(0.414*time)));
     pR(rd.zy, -0.23); // <SUPERPLEK>
     pR(rd.xy, sin(time*0.628) * 3.14*0.24); // <SUPERPLEK>
 
