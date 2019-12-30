@@ -385,10 +385,10 @@ Material gold(vec3 m)
 //                    0.1 // <TT> Reflection gating
 //                   );
     
-    vec3 tex = texture(iChannel2, m.xz).xyz;
+    // vec3 tex = texture(iChannel2, m.xz).xyz;
     
 
-    return Material(tex*vec3(.4,.4,.6), vec3(0.), 1., 0.1, 1.0, 
+    return Material(fDesaturate(vec3(0.1,.5,.5),1.4), vec3(0.), 1., 0.1, 1.0, 
                     0.1 // <TT> Reflection gating
                    );
 }
@@ -458,7 +458,7 @@ vec3 Lighting(LightData data, vec3 ro)
     
     // <SUPERPLEK> seems unnecessary as well, deleted in _refl() func.
     data.worldPos.z = 0.0;
-    cd += PointLight(data, vec3(0.0, 4.0, 0.0), 4.*vec3(0.3, 0.3, 0.2));
+    cd += PointLight(data, vec3(0.0, 1.0, 0.0), 4.*vec3(0.3, 0.3, 0.2));
     
     // add a touch of AO
     float land_of = fAO(data.worldPos, data.normal, 0.05);
