@@ -15,7 +15,7 @@ Also I think I messed up the tiling here, prefereablt the nosie is seamlessly ti
 
 With that as a given, all relevant code is below.
 
-The cube map in iChannel2 is an alternative to real time reflections but frankly it's not great.
+The cube map in iChannel2 is an alternative t`o real time reflections but frankly it's not great.
 So if you #define REFLECTIONS iChannel2 is redundant
 */ 
 
@@ -72,11 +72,11 @@ vec4 fUnityLogo(in vec2 fragCoord)
 
 // -- Unity logo --
 
-//#define REFLECTIONS
+#define REFLECTIONS
 #define FAR 30.0
-#define STEPS 128
-#define REFL_FAR 33.0
-#define REFL_STEPS 32
+#define STEPS 96
+#define REFL_FAR (FAR*.5)
+#define REFL_STEPS (STEPS/2)
 
 #define sat(x) clamp(x,0.0,1.0)
 void pR(inout vec2 p, float a){p=cos(a)*p+sin(a)*vec2(p.y,-p.x);}
@@ -91,10 +91,10 @@ float SDF(vec3 p, out vec4 m)
     // TODO: I suspect ss and I are completely redundant, just I = 0 and let's go
     // vec2 ss = sign(p.xy); // identify each chain uniquely
     // float I = 0.; // <SUPERPLEK> (max(0.0, ss.x) + max(0.0, ss.y) * 2.0) ; // based on the chain create a single unique float 0,1,2,3
-    float T = time*0.628; // <SUPERPLEK> iTime * 0.5 + I * 0.25; // animate the chain over time, with offsets per index, TODO: hard to see because of camera movement, maybe just delete?
+    float T = time*0.928; // <SUPERPLEK> iTime * 0.5 + I * 0.25; // animate the chain over time, with offsets per index, TODO: hard to see because of camera movement, maybe just delete?
     
-    // SUPERPLEK: remember this trick!
-    T = smoothstep(0.2, 0.9, fract(T)) + floor(T); // this trik makes the time progress with smooth steps between each second
+    // <SUPERPLEK> remember this trick! + SYNC!
+    T = smoothstep(0.3, 0.9, fract(T)) + floor(T);
     
     
     p.z += T; // animate the chain over time
@@ -181,9 +181,10 @@ float Trace(vec3 ro, vec3 rd, int steps, float far)
     }
     return t;
 }
+
 vec3 Gradient(vec3 p)
 {
-    const vec2 e = vec2(0.001, 0.0);
+    const vec2 e = vec2(0.01, 0.); 
     return normalize(vec3(SDF(p + e.xyy) - SDF(p - e.xyy),
     SDF(p + e.yxy) - SDF(p - e.yxy),
     SDF(p + e.yyx) - SDF(p - e.yyx)));
@@ -205,7 +206,7 @@ struct ShadowArgs
     int steps;
 };
 // ShadowArgs shadowArgs(){return ShadowArgs(0.1,100.0,128.0,32);}
-ShadowArgs shadowArgs(){return ShadowArgs(0.1,FAR,44.0,96);} // <SUPERPLEK>
+ShadowArgs shadowArgs(){return ShadowArgs(0.1,FAR,128.0,64);} // <SUPERPLEK>
 
 // Basic soft shadow function from http://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm
 float Shadow(vec3 ro, vec3 rd, ShadowArgs shadow)
@@ -221,7 +222,7 @@ float Shadow(vec3 ro, vec3 rd, ShadowArgs shadow)
         #endif
 		if(sampl<0.001)
 			return 0.0;
-		if(dist > shadow.far)
+		if(abs(dist) > shadow.far)
 			return atten;
 		atten = min(atten, shadow.hardness * sampl / dist);
 		dist += sampl;
@@ -325,8 +326,10 @@ vec3 PointLight(LightData data, vec3 point, vec3 color, float lightRadius)
 vec3 PointLight(LightData data, vec3 point, vec3 color, float lightRadius, ShadowArgs shadow)
 {
     vec3 line = point - data.worldPos;
+    
     shadow.far = length(line);
     line /= shadow.far;
+    
     return _PointLight(data, point, color, lightRadius, Shadow(data.worldPos, line, shadow));
 }
 
@@ -361,8 +364,9 @@ Material marble_black(vec2 uv)
     uv += perlin(floor(uv)*0.01)*19.19;
     
 	Material result;
-    result.albedo = 0.3 * sat(vec3(smoothstep(0.55, 0.9, perlin(perlin(uv * 0.1 + 0.11)*vec2(0.6)+uv*0.002-0.44)) + perlin(uv+0.32+perlin(uv-0.19)*0.25) * 0.25));
-    result.specular = 0.025;
+    // <SUPERPLEK> edited values
+    result.albedo = 0.314 * sat(vec3(smoothstep(0.55, 0.9, perlin(perlin(uv * 0.1 + 0.11)*vec2(0.6)+uv*0.002-0.44)) + perlin(uv+0.32+perlin(uv-0.19)*0.25) * 0.25));
+    result.specular = .00314;
     result.roughness = 0.1;
     result.metallicity = .314;
     result.emissive = vec3(0.0);
@@ -376,24 +380,33 @@ Material marble_white(vec2 uv)
 	Material result;
     result.albedo = mix(vec3(1.0), vec3(0.5, 0.4, 0.4), perlin(perlin(uv * 0.1 - 0.11)*vec2(0.6)+uv*0.02));
     result.albedo -= 0.4 * smoothstep(0.5, 0.8, perlin(perlin(uv*0.05+0.3)*vec2(1.0)+0.1));
-    result.specular = 0.1;
+    result.specular = 0.5; // <SUPERPLEK>
     result.roughness = 0.1;
     result.metallicity = 0.314;
-    result.emissive = vec3(0.0);
+    result.emissive = vec3(0.);
     return result;
 }
 
 Material marble_checker(vec2 uv)
 {
     ivec2 cl = ivec2(fract(uv * 0.37) * 2.0);
+    Material result;
     if(cl.x == cl.y)
-        return marble_white(uv);
-    return marble_black(uv);
+        result = marble_white(uv);
+    else
+        result = marble_black(uv);
+    
+    // <SUPERPLEK>
+    result.metallicity = 1.;
+    
+    return result;
 }
 
 Material gold(vec3 m)
 {
-    return Material(fDesaturate(vec3(1.0, 0.4, 0.15), 0.5), vec3(0.0), 0.90, 0.1, 1.0);
+    // <SUPERPLEK> inverted once more like below
+   // return Material(fDesaturate(vec3(1.0, 0.4, 0.15), 0.5), vec3(0.0), 0.90, 0.1, 1.0);
+    return Material(fDesaturate(vec3(1.0, 0.4, 0.15), 2.), vec3(0.0), 0.90, 0.1, 1.0);
 }
 
 Material purpleCloth(vec3 m)
@@ -401,7 +414,7 @@ Material purpleCloth(vec3 m)
     float threading = sin(m.x * 128.0) * 0.5 + 0.5;
     
     // <SUPERPLEK> tweaked for fDesaturate() inversion (ergo inverted colors)
-    return Material(vec3(0.4, 0.9, 0.2), vec3(0.0), threading * 0.3 + 0.05, 0.09, 1.0); 
+    return Material(vec3(0.1, 0.9, 0.2), vec3(0.0), threading * 0.3 + 0.05, 0.09, 1.0); 
 }
 	
 Material GetMaterial(vec4 m, vec3 p)
@@ -422,7 +435,6 @@ Material GetMaterial(vec4 m, vec3 p)
 	return mtl;
 }
 
-// <SUPERPLEK> stuff flickers here!
 vec3 Lighting(LightData data, vec3 ro)
 {
 	vec3 cd = vec3(0.0);
@@ -431,20 +443,52 @@ vec3 Lighting(LightData data, vec3 ro)
 	cd += RimLight(data, vec3(0.02, 0.02, 0.04), 3.0);
     
     // <SUPERPLEK> here's your lighting snafu, je kunt niet zomaar door die geometry heen gaan casten en doen, wordt 1 kolerezooi
+    // the best solution here would be to take the rotation into account! FIXME!!
 //    cd += PointLight(data, ro + vec3(1.0, 1.0, 8.0), vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
     cd += PointLight(data, vec3(.0, .0, 8.0)+ro, vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
+    cd += PointLight(data, vec3(.0, .0, -8.0)+ro, vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
     
-    float spacing = 20.0; // <SUPERPLEK> makes the chain a bit more Quinton 'Rampage' Jackson
+    float spacing = 5.0; // <SUPERPLEK> makes the chain a bit more Quinton 'Rampage' Jackson
     float tmp = fract(data.worldPos.z / spacing) - 0.5;
     data.worldPos.z = tmp * spacing;
     float mask = 1.0 - abs(tmp + tmp);
     cd += PointLight(data, vec3(0.0), vec3(1.0)) * mask;
     
+    // <SUPERPLEK> pos mod
     data.worldPos.z = 0.0;
-    cd += PointLight(data, vec3(0.0, 1.0, 0.0), 4.*vec3(0.3, 0.3, 0.2));
+    cd += PointLight(data, vec3(0.0, 4.0, 0.0), 4.*vec3(0.3, 0.3, 0.2));
+
     
     return cd;
 }
+
+// <SUPERPLEK> just copying to simplify modifying reflections
+vec3 Lighting_refl(LightData data, vec3 ro)
+{
+	vec3 cd = vec3(0.0);
+    
+    // <SUPERPLEK> unnecessary
+    // cd += AmbientLight(data, vec3(0.015, 0.015, 0.01));
+	// cd += RimLight(data, vec3(0.02, 0.02, 0.04), 3.0);
+    
+    // <SUPERPLEK> here's your lighting snafu, je kunt niet zomaar door die geometry heen gaan casten en doen, wordt 1 kolerezooi
+//    cd += PointLight(data, ro + vec3(1.0, 1.0, 8.0), vec3(20.0, 17.0, 10.0), 0.0, shadowArgs());
+    cd += PointLight(data, vec3(.0, .0, 8.0)+ro, vec3(20.0, 17.0, 10.0), .0);
+    cd += PointLight(data, vec3(.0, .0, -8.0)+ro, vec3(20.0, 17.0, 10.0), .0);
+    
+    float spacing = 5.0; // <SUPERPLEK> makes the chain a bit more Quinton 'Rampage' Jackson
+    float tmp = fract(data.worldPos.z / spacing) - 0.5;
+    data.worldPos.z = tmp * spacing;
+    float mask = 1.0 - abs(tmp + tmp);
+    cd += PointLight(data, vec3(0.0), vec3(1.0)) * mask;
+    
+    // <SUPERPLEK> posmod
+    data.worldPos.z = 0.0;
+    cd += PointLight(data, vec3(0.0, 4.0, 0.0), 2.*vec3(0.3, 0.3, 0.2));
+
+    return cd;
+}
+
 vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far, out vec3 p, out vec3 n, out float fog, out vec3 s, out vec3 bg)
 {
     float d = Trace(ro, rd, steps, far);
@@ -465,6 +509,7 @@ vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far, out vec3 p, out vec3 
     LightData data = LightData(rd, n, p, mtl, 1.0);
 	return Lighting(data, ro) + mtl.emissive;
 }
+
 vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far)
 {
     vec3 p,n,bg,s;
@@ -472,6 +517,38 @@ vec3 TraceAndShade(vec3 ro, vec3 rd, int steps, float far)
    	vec3 fg = TraceAndShade(ro,rd,steps,far,p,n,fog,s,bg);
     return mix(fg, bg, fog);
 }
+
+// <SUPERPLEK> just copying to simplify modifying reflections
+vec3 TraceAndShade_refl(vec3 ro, vec3 rd, int steps, float far, out vec3 p, out vec3 n, out float fog, out vec3 s, out vec3 bg)
+{
+    float d = Trace(ro, rd, steps, far);
+	bg = mix(vec3(0.5, 0.9, 0.2)*0.4, vec3(0.0), sqrt(abs(rd.y))); // <SUPERPLEK>
+    fog = 1.-(exp(-0.00314*d*d*d)); // sat(d/(FAR*0.6)); // <SUPERPLEK>
+    
+    // <SUPERPLEK> this doesn't seem worth the branching
+    //if(fog == 1.0)
+    //    return vec3(0.0);
+    
+    fog = fog*fog;
+    p = ro + rd * d;
+    n = Gradient(p);
+    vec4 m;
+    SDF(p,m);
+    Material mtl = GetMaterial(m, p);
+    s = mtl.specular * mix(vec3(1.0), mtl.albedo, mtl.metallicity);
+    LightData data = LightData(rd, n, p, mtl, 1.0);
+	return Lighting_refl(data, ro) + mtl.emissive;
+}
+
+// <SUPERPLEK> just copying to simplify modifying reflections
+vec3 TraceAndShade_refl(vec3 ro, vec3 rd, int steps, float far)
+{
+    vec3 p,n,bg,s;
+    float fog;
+   	vec3 fg = TraceAndShade(ro,rd,steps,far,p,n,fog,s,bg);
+    return mix(fg, bg, fog);
+}
+
 // https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 vec3 ACESFilm( vec3 x )
 {
@@ -492,18 +569,27 @@ vec3 LinearToSRGB(vec3 rgb)
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     vec2 uv = (fragCoord * 2.0 - iResolution.xy) / iResolution.y;
-	vec3 ro = vec3(0. /* SUPERPLEK */, .35 /* SUPERPLEK: camera up! */, time * 2.6);
+	vec3 ro = vec3(0. /* SUPERPLEK */, .35 /* SUPERPLEK: camera up! */, time * 3.6);
     vec3 rd = normalize(vec3(uv, /* 1.5 <SUPERPLEK> */ 1.) + vec3(sin(time), cos(time * 0.411), 0.0) * 0.1);
-    
+	
+    // <SUPERPLEK> camera sync.(TODO)
+    pR(rd.xz, PI*smoothstep(-1., 1., sin(0.314*time)));
     pR(rd.zy, -0.23); // <SUPERPLEK>
     pR(rd.xy, sin(time*0.628) * 3.14*0.24); // <SUPERPLEK>
+
+    
     vec3 bg, p, n, specularColor;
     float fog;
     vec3 fg = TraceAndShade(ro, rd, STEPS, FAR, p, n, fog, specularColor, bg);
 #ifdef REFLECTIONS
     // TODO: I may want to do reflections in a half-res pass for perf
-    float mask = pow(1.0 / (1.0 + length(p-ro)), 0.25);
-    fg += mask * specularColor * TraceAndShade(p + reflect(rd, n) * 0.05, reflect(rd, n), REFL_STEPS, REFL_FAR);
+    
+    // <SUPERPLEK> editing..
+    float mask = pow(1.0 / (0.5+length(p-ro)), 0.01);
+    vec3 refldir = normalize(reflect(rd, n));
+    vec3 fg_refl = mask * TraceAndShade_refl(p, refldir /* SUPERPLEK: offsetting here only yields artifacts */, REFL_STEPS, REFL_FAR);
+    float refl_amt = fog;
+  	fg += specularColor*fg_refl*refl_amt;
 #else
     // I think this sample needs to be ^2.2 due to the image being srgb?
     // <SUPERPLEK> if you want to be fully correct, yes
@@ -516,7 +602,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	cd = LinearToSRGB(cd);
     cd = cd*0.2 + 0.8*ACESFilm(cd); // max(cd, 0.0)); // <SUPERPLEK>
     
-    cd = fDesaturate(cd, 1.314); // <SUPERPLEK> inverts colors more or less :)
+    cd = fDesaturate(cd, 1.414); // <SUPERPLEK> inverts colors more or less :)
 
     // Add Unity logo, deal with 'em!
     vec4 unity = fUnityLogo(fragCoord.xy);

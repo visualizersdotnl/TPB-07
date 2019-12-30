@@ -13,7 +13,7 @@ float perlin(vec2 uv, int wrap)
         t += snoise(uv,wrap/2)*w;
         uv += uv;
         w *= 0.5;
-        //wrap += wrap;
+        wrap += wrap; // <SUPERPLEK> still not pixel perfect but very close wrap
     }
     return t;
 }

@@ -89,16 +89,21 @@ typedef enum t_attrib_id
 	attrib_color
 } t_attrib_id;
 
-/*
+// ---
+
+// this was/is a little experiment initiated by one Pieter van der Meer
+// what we've learned that labels are padded so that they, if so desired, fit within
+// the block a branch predictor can use (it used to be 16 bits at a time, generated code suggests as much)
+// the lower bits don't matter then, so a loop address can very well be "unaligned" in that manner
+// here's more information: https://www.agner.org/optimize/microarchitecture.pdf see section 3.8
+
 volatile uint64_t g_bullshit1;
 volatile uint64_t g_bullshit2;
 
 __declspec(noinline) void upbs2() { ++g_bullshit2; }
-*/
 
-int main( int argc, char * argv[] )
+__declspec(noinline) void looptest()
 {
-/*
 	__debugbreak();
 	// because Marco <3 UB
 	for (int i = 0; i < 3; ++i)
@@ -111,7 +116,13 @@ int main( int argc, char * argv[] )
 			upbs2();			
 		}
 	}
-*/
+}
+
+//
+
+int main( int argc, char * argv[] )
+{
+//	looptest();
 
 	int retVal = 0;
 
