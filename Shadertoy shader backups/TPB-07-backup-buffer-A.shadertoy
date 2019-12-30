@@ -4,7 +4,7 @@
 
 // -- Taken from newer shader(s) --
 
-#define time (iTime*0.8)
+#define time (iTime*0.4)
 #define sat(x) clamp(x,0.0,1.0)
 
 // Thanks, Trevor!
@@ -244,9 +244,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     col = mix(col, vec3(0., 0., 0.), fog); // COLOR YOUR FOG!
 	
     // Interlace
-    float inter = mod(fragCoord.y, 2.);
-    if (inter > 1.)
-       col *= 0.96+ (0.3*r_fresnel); // THIS LOOKS SEXY!
+    //float inter = mod(fragCoord.y, 2.);
+    //if (inter > 1.)
+     //  col *= 0.96*r_fresnel; // THIS LOOKS SEXY!
 
     // Toning
 //    col = col*0.6 + 0.3*ACESFilm(col);
@@ -265,5 +265,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // col = mix(col, flash, flash_t);
         
     // Output to screen
-    fragColor = vec4(col,1.0);
+    fragColor = vec4(col,1.);
 }

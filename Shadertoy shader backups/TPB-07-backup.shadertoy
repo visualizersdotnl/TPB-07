@@ -4,6 +4,8 @@
 // Edited by Superplek / Bypass
 // 
 // Blur inspired by David Hoskins, flares inspired by John Chapman
+//
+// Effect (backup?) for TPB-07
 
 #define BLUR_ITERATIONS 32
 #define GOLDEN_ANGLE 2.39996
@@ -99,10 +101,10 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float vignette = 0.2 + 0.8 * pow(10.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.25);
     vignette = clamp(vignette + 0.1, 0.0, 1.0);
     
-    float mixBokeh = 1.0;
-    float mixFlare = 0.89;
+    float mixBokeh = 0.3;
+    float mixFlare = 1.89;
     
-    vec3 bokeh = Bokeh(iChannel2, uv, 3.0 - vignette * 3.0) * vec3(mixBokeh);
+    vec3 bokeh = Bokeh(iChannel2, uv, 4.0 - vignette * 4.0) * vec3(mixBokeh);
     
     vec2 direction = normalize(vec2(1.0) - uv - vec2(0.5));
     vec2 aberrated = 0.0114 * pow(direction, vec2(4.0));
