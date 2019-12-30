@@ -4,7 +4,7 @@
 
 // -- Taken from newer shader(s) --
 
-#define time (iTime*0.314*0.7)
+#define time (iTime*0.628)
 #define sat(x) clamp(x,0.0,1.0)
 
 // Thanks, Trevor!
@@ -124,7 +124,7 @@ float lauraspec(vec3 eye, vec3 hit, vec3 normal, vec3 ldir)
 {
     vec3 v = normalize(eye-hit);
 	vec3 h = normalize(ldir+v);
-    float spec = pow(max(dot(normal, h), 0.), 4.);
+    float spec = pow(max(dot(normal, h), 0.), 8.);
     return spec;
 }
 
@@ -192,10 +192,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     float refltotal = total; // IMPORTANT: do *not* set to 0!
     vec3 refldir = reflect(dir, normal); // IMPORTANT: order matters! DIR, NORMAL!
     vec3 refleye = hit;
-    for (int i = 0; i < 96; ++i)
+    for (int i = 0; i < 32; ++i)
     {
         float march = laura(reflhit);
-        refltotal += march; 
+        refltotal += march;
+        if (refltotal > 32.)
+            break;
         reflhit = refleye + refldir*refltotal;
     }
 
@@ -204,7 +206,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // Lighting for reflection
     vec3 r_ldir = normalize(lpos-reflhit);
     float r_diffuse = max(0., dot(r_normal, r_ldir));
-    float r_fresnel = pow(max(0., dot(r_normal, r_ldir)), 16.);
+    float r_fresnel = pow(max(0., dot(r_normal, r_ldir)), 8.);
 
     // Main color
     vec3 albedo =vec3(0.2, 0.6, 1.);
@@ -232,16 +234,16 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // Lighting: just set to diffuse, then add diffuse*rim, add fresnel and mix
     // with reflection albedo*diffuse*fresnel*ymod based on a factor of sorts
     col = albedo*diffuse;
-    col += albedo*diffuse*rim;
-    col += fresnel+r_fresnel;
+    col += albedo*diffuse*r_fresnel + fresnel;
+//    col += fresnel+r_fresnel;
     col = mix(col, albedo*r_diffuse*r_fresnel*ymod, rim*diffuse);
     
     // Ambient
     col += vec3(0.1, 0.1, 0.1);
     
     // Add fog (can colorize without artifacts)
-    float fog = 1.-(exp(-0.003*total*total));
-    col = mix(col, vec3(0., 0., 0.), fog); // COLOR YOUR FOG!
+    float fog = 1.-(exp(-0.0005*total*total*total));
+    col = mix(col, albedo, fog); // vec3(0., 0., 0.), fog); // COLOR YOUR FOG!
 	
     // Interlace
     //float inter = mod(fragCoord.y, 2.);
