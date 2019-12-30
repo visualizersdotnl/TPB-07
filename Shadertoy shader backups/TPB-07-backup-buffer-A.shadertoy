@@ -4,7 +4,7 @@
 
 // -- Taken from newer shader(s) --
 
-#define time (iTime*0.314*0.5)
+#define time (iTime*0.314*0.7)
 #define sat(x) clamp(x,0.0,1.0)
 
 // Thanks, Trevor!
@@ -233,7 +233,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // with reflection albedo*diffuse*fresnel*ymod based on a factor of sorts
     col = albedo*diffuse;
     col += albedo*diffuse*rim;
-    col += fresnel;
+    col += fresnel+r_fresnel;
     col = mix(col, albedo*r_diffuse*r_fresnel*ymod, rim*diffuse);
     
     // Ambient

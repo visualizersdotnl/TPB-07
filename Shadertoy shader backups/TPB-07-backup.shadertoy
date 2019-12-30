@@ -8,7 +8,7 @@
 // Effect (backup?) for TPB-07
 // Became a bit of a 2D Burra-style 90s thing
 
-#define BLUR_ITERATIONS 32
+#define BLUR_ITERATIONS 64
 #define GOLDEN_ANGLE 2.39996
 
 // -- Plek/Trevor's crap --
@@ -118,7 +118,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec3 bokeh = Bokeh(iChannel2, uv, 4.0 - vignette * 4.0) * vec3(mixBokeh);
     
     vec2 direction = normalize(vec2(1.0) - uv - vec2(0.5));
-    vec2 aberrated = 0.0084 * pow(direction, vec2(4.0));
+    vec2 aberrated = 0.0044 * pow(direction, vec2(4.0));
 
     vec3 col = vec3(texture(iChannel0, uv - aberrated).r,
                     texture(iChannel0, uv).g,

@@ -6,7 +6,7 @@
 #define NUM_GHOSTS 4
 #define SPACING 0.4
 #define WEIGHT 6.28
-#define DISTORTION 0.614
+#define DISTORTION 0.314
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
