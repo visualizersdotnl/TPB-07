@@ -67,6 +67,12 @@
     <None Include="..\README.md">
       <Filter>Notes</Filter>
     </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor-common.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor-buffer-A.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Timeline.txt">

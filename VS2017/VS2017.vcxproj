@@ -174,6 +174,8 @@
     <None Include="..\Shadertoy shader backups\TPB-07-backup-shader.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Melting-cubes-buffer-A.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Radial-blur.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor-buffer-A.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-Trevor-common.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor-cubemap.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-Metaballs-buffer-A.shadertoy" />
