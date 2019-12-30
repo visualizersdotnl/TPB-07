@@ -7,5 +7,9 @@
 // - to cube map #1
 // - a 2D shader for sprites (with fixed path perhaps)
 
-
+enum ShaderType
+{
+	ST_TO_CUBE,
+	ST_TO_BUFFER
+};
 

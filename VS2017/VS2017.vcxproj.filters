@@ -43,9 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
-    <None Include="..\Shadertoy shader backups\TPB-07-backup-shader.shadertoy">
-      <Filter>/Shadertoy backups</Filter>
-    </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Melting-cubes-buffer-A.shadertoy">
       <Filter>/Shadertoy backups</Filter>
     </None>
@@ -71,6 +68,18 @@
       <Filter>/Shadertoy backups</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor-buffer-A.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-backup.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-A.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-B.shadertoy">
+      <Filter>/Shadertoy backups</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-C.shadertoy">
       <Filter>/Shadertoy backups</Filter>
     </None>
   </ItemGroup>

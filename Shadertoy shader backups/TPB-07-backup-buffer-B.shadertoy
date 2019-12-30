@@ -1,0 +1,35 @@
+
+// Ravity:
+// This pass blurs the brightest parts of the framebuffer and flips the output horizontally and vertically
+
+#define SCALE 3.28
+#define BIAS -0.19
+
+vec4 threshold(vec4 color, float bias, float scale)
+{
+     return max(vec4(0.0), color + vec4(bias)) * vec4(scale);    
+}
+
+// Fastblur taken from 'fast hacky blur' by williammalo2
+vec4 fastBlur(sampler2D tex,vec2 p, float res)
+{
+    vec2 pixelSize = 1.0 / iResolution.xy;
+	float pixSize = pow(2.0, res);
+    
+    vec4 blurred =
+	pow(threshold(texture(tex,(p + pixSize * vec2(-1.5,-0.5)) * pixelSize, res + 1.0), BIAS, SCALE), vec4(2.2)) * 4.0 +
+    pow(threshold(texture(tex,(p + pixSize * vec2( 0.5,-1.5)) * pixelSize, res + 1.0), BIAS, SCALE), vec4(2.2)) * 4.0 +
+    pow(threshold(texture(tex,(p + pixSize * vec2( 1.5, 0.5)) * pixelSize, res + 1.0), BIAS, SCALE), vec4(2.2)) * 4.0 +
+    pow(threshold(texture(tex,(p + pixSize * vec2(-0.5, 1.5)) * pixelSize, res + 1.0), BIAS, SCALE), vec4(2.2)) * 4.0 +
+    pow(threshold(texture(tex,p * pixelSize,res+1.0),BIAS, SCALE),vec4(2.2));
+    blurred *= 0.058823529;
+    
+    return pow(blurred,vec4(1.0 / 2.2));
+}
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{  
+	vec2 uv = fragCoord;
+    vec3 col = fastBlur(iChannel0, uv, 2.0).xyz;
+    fragColor = vec4(col, 1);
+}

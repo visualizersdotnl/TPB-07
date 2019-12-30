@@ -388,7 +388,7 @@ Material gold(vec3 m)
     // vec3 tex = texture(iChannel2, m.xz).xyz;
     
 
-    return Material(fDesaturate(vec3(0.1,.5,.5),1.4), vec3(0.), 1., 0.1, 1.0, 
+    return Material(vec3(0.8, 0.4, 0.3), vec3(0.), 1., 0.1, 1.0, 
                     0.1 // <TT> Reflection gating
                    );
 }

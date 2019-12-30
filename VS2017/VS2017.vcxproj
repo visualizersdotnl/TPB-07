@@ -171,7 +171,10 @@
     <None Include="..\.gitignore" />
     <None Include="..\LICENSE" />
     <None Include="..\README.md" />
-    <None Include="..\Shadertoy shader backups\TPB-07-backup-shader.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-A.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-B.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-C.shadertoy" />
+    <None Include="..\Shadertoy shader backups\TPB-07-backup.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Melting-cubes-buffer-A.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Radial-blur.shadertoy" />
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor-buffer-A.shadertoy" />

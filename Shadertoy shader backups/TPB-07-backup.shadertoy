@@ -1,0 +1,124 @@
+// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. (https://www.shadertoy.com/view/4d2Xzw)
+// 
+// Annyeong by Ravity / Solar
+// Edited by Superplek / Bypass
+// 
+// Blur inspired by David Hoskins, flares inspired by John Chapman
+
+#define BLUR_ITERATIONS 32
+#define GOLDEN_ANGLE 2.39996
+
+// -- Taken from newer shader(s) --
+
+#define time iTime
+
+#define sat(x) clamp(x,0.0,1.0)
+
+// Thanks, Trevor!
+// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+vec3 ACESFilm(vec3 x)
+{
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return sat((x*(a*x+b))/(x*(c*x+d)+e));
+}
+
+
+mat2 fRot(float theta)
+{
+    return mat2(cos(theta), sin(theta), -sin(theta), cos(theta));
+}
+
+// -- Unity logo --
+
+// Source: https://www.shadertoy.com/view/ld3XDse 
+// Edited it to rotate and scale to a corner for this specific shader.
+
+float a(vec2 uv)
+{
+    uv.y = abs(uv.y);
+    vec4 ss = vec4(uv.xy, .11, .79) - uv.yxyy + vec4(1.5,-1.2,0,0);
+    return min(min(min(ss.x,ss.w),-uv.x),max(ss.y,ss.z));
+}
+
+vec4 fUnityLogo(in vec2 fragCoord)
+{
+    mat2 mrot = fRot(time*0.3);
+    vec2 uv = (fragCoord - iResolution.xy*0.5) * 16. / iResolution.y,
+         sup = vec2(-.5, .866),
+         supo = vec2(.866, .5);
+    
+    // EDIT: move to corner
+    uv.x -= 12.;
+    uv.y -= 6.;
+            
+    // improved s by Fabrice! Thanx!
+    // EDIT: added rotation
+    float s = max(a(mrot*uv),max(a(mrot*uv*mat2(-.5,.866,.866,.5)),a(-mrot*uv*mat2(.5,.866,.866,-.5))));
+
+    float logo = smoothstep(-fwidth(uv.x)*1.9,.0,s)*0.7;
+    vec4 col = vec4(.13,.17,.22,logo) + logo; 
+
+    float i = smoothstep(.5,1.,sin(time*2.7 + uv.x + uv.y));
+    
+    // EDIT: made it much brighter
+    col *= 0.9+(vec4(1)*s*.2+0.2*i);
+   
+    return clamp(col,.0,1.);
+}
+
+// To do: optimalization comparison between uniform and const
+mat2 rot = mat2(cos(GOLDEN_ANGLE), sin(GOLDEN_ANGLE), -sin(GOLDEN_ANGLE), cos(GOLDEN_ANGLE));
+
+// David Hoskins' Bokeh method optimzed for size (and cutting corners)
+vec3 Bokeh(sampler2D tex, vec2 uv, float radius)
+{
+    vec2 angle = vec2(0.0 ,radius * 0.01 / sqrt(float(BLUR_ITERATIONS)));    
+	vec3 color = vec3(0);
+    vec3 div = vec3(0);
+
+    float r = 1.0;
+    for (int i = 0; i < BLUR_ITERATIONS; i++, r += 1.0 / r, angle *= rot)
+    {
+		vec3 c = texture(tex, uv + r * angle).xyz;
+        vec3 contrast = pow(c, vec3(4));       
+        color += c * c * 2.0 * contrast;
+        div += contrast;
+    }
+    
+    return color / div;
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	vec2 uv = fragCoord.xy / iResolution.xy; 
+    
+    float vignette = 0.2 + 0.8 * pow(10.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.25);
+    vignette = clamp(vignette + 0.1, 0.0, 1.0);
+    
+    float mixBokeh = 1.0;
+    float mixFlare = 0.89;
+    
+    vec3 bokeh = Bokeh(iChannel2, uv, 3.0 - vignette * 3.0) * vec3(mixBokeh);
+    
+    vec2 direction = normalize(vec2(1.0) - uv - vec2(0.5));
+    vec2 aberrated = 0.0114 * pow(direction, vec2(4.0));
+
+    vec3 col = vec3(texture(iChannel0, uv - aberrated).r,
+                    texture(iChannel0, uv).g,
+                    texture(iChannel0, uv + aberrated).b);
+
+    // Add Unity logo, deal with 'em!
+    vec4 unity = fUnityLogo(fragCoord.xy);
+    col = mix(col, unity.xyz, unity.w);
+    col.z += unity.w*0.328;
+
+	vec3 dofColors = col * vec3(mixFlare);
+
+	vec3 finalCol = max(dofColors, bokeh)*vignette;
+    
+    fragColor = vec4(0.3*finalCol + 0.7*ACESFilm(finalCol), 1.0);
+}

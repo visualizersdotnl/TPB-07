@@ -8,8 +8,11 @@
 	- Cracktro: https://www.shadertoy.com/view/Wl33WS
 	- Caged balls: https://www.shadertoy.com/view/Wt3GWB
 	- Trevor: https://www.shadertoy.com/view/Wtc3DB
-	- Backup: https://www.shadertoy.com/view/wt2Gzw
+	- Backup: https://www.shadertoy.com/view/tl3GWf
 	- Always check for latest before using backups, esp. check different radial blur tweaks
+
+	Ravity's flare shader:
+	- https://www.shadertoy.com/view/3ttGDj?fbclid=IwAR0QaSRCmMIi9xW2XV8hkyXiK0-an-DL8oyl70VEeiTAfoXFc-P-MX09j2Q
 
 	I swear that I will:
 	- Not overengineer a single bit
@@ -18,13 +21,16 @@
 	- We will use a small subset of OpenGL, so all should be fine
 
 	To do:
+	- Ask Nytrik for some typography graphics
 	- Get 1 single shader to work as GLSL, this will require:
 	  + Loading shader from text, *or*, integrating it as a long string! :)
-	  + Try to use a render target
-	  + If this all works: try to get Trevor's shader to work
-	  + Now build a basic 2D sprite draw system (doesn't SDL do this for you?)
-	  + Play some music (use BASS)
-	  + Integrate GNU Rocket
+	- Implement render targets
+	- Take some time to split the common functionality out of most shaders and stash them in includes
+	- Try to get every shader *but* Trevor's to work
+	- Implement cubemaps and implement Trevor's
+	- Implement basic 2D rendering system
+	- Play some music (BASS)
+	- GNU Rocket integration
 
 	Links with information:
 	  + Cubemaps: https://learnopengl.com/Advanced-OpenGL/Cubemaps
