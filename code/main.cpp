@@ -9,7 +9,7 @@
 	- Caged balls: https://www.shadertoy.com/view/Wt3GWB
 	- Trevor: https://www.shadertoy.com/view/Wtc3DB
 	- Backup: https://www.shadertoy.com/view/tl3GWf
-	- Always check for latest before using backups, esp. check different radial blur tweaks
+	- Always check for latest before using backups, esp. check different radial blur tweaks and assigned buffers
 
 	Ravity's flare shader:
 	- https://www.shadertoy.com/view/3ttGDj?fbclid=IwAR0QaSRCmMIi9xW2XV8hkyXiK0-an-DL8oyl70VEeiTAfoXFc-P-MX09j2Q
