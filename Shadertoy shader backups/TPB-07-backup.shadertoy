@@ -29,6 +29,15 @@ vec3 ACESFilm(vec3 x)
     return sat((x*(a*x+b))/(x*(c*x+d)+e));
 }
 
+// Trevor's function
+vec3 fVignette(vec3 color, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord/iResolution.xy;
+    uv *=  1. - uv.yx;
+    float vignetting = uv.x*uv.y * 25.;
+    vignetting = sat(pow(vignetting, .25));
+    return color*vignetting;
+}
 
 mat2 fRot(float theta)
 {
@@ -109,16 +118,16 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
 	vec2 uv = fragCoord.xy / iResolution.xy; 
     
-    float vignette = 0.2 + 0.8 * pow(10.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.25);
+    float vignette = 0.2 + 0.8 * pow(10.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.15);
     vignette = clamp(vignette + 0.1, 0.0, 1.0);
     
-    float mixBokeh = 0.3;
-    float mixFlare = 1.89;
+    float mixBokeh = 0.14;
+    float mixFlare = 1.33;
     
-    vec3 bokeh = Bokeh(iChannel2, uv, 4.0 - vignette * 4.0) * vec3(mixBokeh);
+    vec3 bokeh = Bokeh(iChannel2, uv, (1.-vignette)*3.) * vec3(mixBokeh);
     
     vec2 direction = normalize(vec2(1.0) - uv - vec2(0.5));
-    vec2 aberrated = 0.0004 * pow(direction, vec2(4.0));
+    vec2 aberrated = 0.0006 * pow(direction, vec2(4.0));
 
     vec3 col = vec3(texture(iChannel0, uv - aberrated).r,
                     texture(iChannel0, uv).g,
@@ -132,11 +141,14 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	vec3 dofColors = col * vec3(mixFlare);
 
 	vec3 finalCol3 = max(dofColors, bokeh)*vignette;
+//	vec3 finalCol3 = fVignette(max(dofColors, bokeh), fragCoord);
     
     // shit film grain (by Trevor :))
     finalCol3 += (h1(vec4(fragCoord.x,fragCoord.y,time,col.z)) - 0.5) * 0.05;
+    finalCol3 = 0.4*finalCol3 + 0.6*ACESFilm(finalCol3);
+    
  
-    vec4 finalCol4 = vec4(0.3*finalCol3 + 0.7*ACESFilm(finalCol3), 1.0);
+    vec4 finalCol4 = vec4(finalCol3, 1.0);
 
     
     fragColor = finalCol4;
