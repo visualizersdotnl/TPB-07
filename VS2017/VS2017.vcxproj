@@ -159,6 +159,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdparty\Std3DMath-01-01-2020\Matrix44.cpp" />
+    <ClCompile Include="..\3rdparty\Std3DMath-01-01-2020\Misc.cpp" />
+    <ClCompile Include="..\3rdparty\Std3DMath-01-01-2020\Quaternion.cpp" />
     <ClCompile Include="..\code\text-loader.cpp" />
     <ClCompile Include="..\code\main.cpp" />
     <ClCompile Include="..\code\shader.cpp" />
@@ -169,6 +172,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\3rdparty\Std3DMath-01-01-2020\LICENSE" />
+    <None Include="..\3rdparty\Std3DMath-01-01-2020\README.md" />
     <None Include="..\LICENSE" />
     <None Include="..\README.md" />
     <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-A.shadertoy" />
@@ -188,6 +193,14 @@
     <Text Include="..\to-do.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Dependencies.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Math.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Matrix44.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Misc.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Quaternion.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Vector2.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Vector3.h" />
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Vector4.h" />
     <ClInclude Include="..\code\text-loader.h" />
     <ClInclude Include="..\code\main-header.h" />
     <ClInclude Include="..\code\shader.h" />

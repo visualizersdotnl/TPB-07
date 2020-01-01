@@ -36,6 +36,12 @@
     <Filter Include="/Shadertoy backups\Radial blur %28common%29">
       <UniqueIdentifier>{9db87ff8-25f4-446d-a39d-9f11cbd4f097}</UniqueIdentifier>
     </Filter>
+    <Filter Include="/3rdparty libraries %28x64 only%29\Libraries to link">
+      <UniqueIdentifier>{ddf64186-9dff-4a95-8851-3476379e0974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020">
+      <UniqueIdentifier>{9f8f586b-6ad5-4541-8865-e2b78e5f675f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\code\main.cpp">
@@ -47,13 +53,22 @@
     <ClCompile Include="..\code\text-loader.cpp">
       <Filter>/code</Filter>
     </ClCompile>
+    <ClCompile Include="..\3rdparty\Std3DMath-01-01-2020\Matrix44.cpp">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\Std3DMath-01-01-2020\Misc.cpp">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparty\Std3DMath-01-01-2020\Quaternion.cpp">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\3rdparty\SDL2-devel-2.0.10-VC\SDL2-2.0.10\lib\x64\SDL2.lib">
-      <Filter>/3rdparty libraries %28x64 only%29</Filter>
-    </Library>
     <Library Include="..\3rdparty\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64\glew32.lib">
-      <Filter>/3rdparty libraries %28x64 only%29</Filter>
+      <Filter>/3rdparty libraries %28x64 only%29\Libraries to link</Filter>
+    </Library>
+    <Library Include="..\3rdparty\SDL2-devel-2.0.10-VC\SDL2-2.0.10\lib\x64\SDL2.lib">
+      <Filter>/3rdparty libraries %28x64 only%29\Libraries to link</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +112,12 @@
     <None Include="..\Shadertoy shader backups\TPB-Metaballs-buffer-A.shadertoy">
       <Filter>/Shadertoy backups\Caged metaballs</Filter>
     </None>
+    <None Include="..\3rdparty\Std3DMath-01-01-2020\LICENSE">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </None>
+    <None Include="..\3rdparty\Std3DMath-01-01-2020\README.md">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Timeline.txt">
@@ -115,6 +136,30 @@
     </ClInclude>
     <ClInclude Include="..\code\text-loader.h">
       <Filter>/code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Dependencies.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Math.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Matrix44.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Misc.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Quaternion.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Vector2.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Vector3.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparty\Std3DMath-01-01-2020\Vector4.h">
+      <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
