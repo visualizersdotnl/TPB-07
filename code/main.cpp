@@ -271,7 +271,8 @@ int main( int argc, char * argv[] )
 				if(event.key.keysym.sym == SDLK_ESCAPE)
 					goto quit;
 
-			break;
+			default:
+				break;
 			}
 		}
 
