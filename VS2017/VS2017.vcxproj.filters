@@ -27,14 +27,14 @@
     <Filter Include="/Shadertoy backups\Melting cubes">
       <UniqueIdentifier>{62dc9334-834a-4f52-ae67-6b9d621fd2d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="/Shadertoy backups\Common">
-      <UniqueIdentifier>{9db87ff8-25f4-446d-a39d-9f11cbd4f097}</UniqueIdentifier>
-    </Filter>
     <Filter Include="/Shadertoy backups\Trevor%27s dungeon">
       <UniqueIdentifier>{d852f682-af54-42b9-9dfd-1d3af8a67986}</UniqueIdentifier>
     </Filter>
     <Filter Include="/Shadertoy backups\Caged metaballs">
       <UniqueIdentifier>{62f49ca6-0736-48df-a595-aefb7187afe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="/Shadertoy backups\Radial blur %28common%29">
+      <UniqueIdentifier>{9db87ff8-25f4-446d-a39d-9f11cbd4f097}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,7 +80,7 @@
       <Filter>/Shadertoy backups\Melting cubes</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Radial-blur.shadertoy">
-      <Filter>/Shadertoy backups\Common</Filter>
+      <Filter>/Shadertoy backups\Radial blur %28common%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor.shadertoy">
       <Filter>/Shadertoy backups\Trevor%27s dungeon</Filter>
