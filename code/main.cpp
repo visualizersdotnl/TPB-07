@@ -32,7 +32,7 @@
 
 typedef float t_mat4x4[16];
 
-static inline void mat4x4_ortho( t_mat4x4 out, float left, float right, float bottom, float top, float znear, float zfar )
+static inline void mat4x4_ortho(t_mat4x4 out, float left, float right, float bottom, float top, float znear, float zfar)
 {
 	#define T(a, b) (a * 4 + b)
 
@@ -123,7 +123,7 @@ __declspec(noinline) void looptest()
 
 // ---
 
-int main( int argc, char * argv[] )
+int main(int argc, char * argv[])
 {
 //	looptest();
 	
