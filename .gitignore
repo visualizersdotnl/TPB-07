@@ -3,8 +3,6 @@
 /VS2017/x64
 /VS2017/*.user
 /VS2017/.vs
-/target-x64/*.iobj
-/target-x64/*.ipdb
 /target-x64/*.ilk
 /target-x64/*.pdb
 /target-x64/*.exe
@@ -41,3 +39,5 @@
 *.exe
 *.out
 *.app
+*.iobj
+*.ipdb

@@ -41,10 +41,10 @@
     <ClCompile Include="..\code\main.cpp">
       <Filter>/code</Filter>
     </ClCompile>
-    <ClCompile Include="..\code\glsl_loader.cpp">
+    <ClCompile Include="..\code\shader.cpp">
       <Filter>/code</Filter>
     </ClCompile>
-    <ClCompile Include="..\code\shader.cpp">
+    <ClCompile Include="..\code\text-loader.cpp">
       <Filter>/code</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,13 +107,13 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\code\glsl_loader.h">
-      <Filter>/code</Filter>
-    </ClInclude>
     <ClInclude Include="..\code\shader.h">
       <Filter>/code</Filter>
     </ClInclude>
-    <ClInclude Include="..\code\main_header.h">
+    <ClInclude Include="..\code\main-header.h">
+      <Filter>/code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\code\text-loader.h">
       <Filter>/code</Filter>
     </ClInclude>
   </ItemGroup>

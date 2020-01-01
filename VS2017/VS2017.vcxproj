@@ -159,7 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\code\glsl_loader.cpp" />
+    <ClCompile Include="..\code\text-loader.cpp" />
     <ClCompile Include="..\code\main.cpp" />
     <ClCompile Include="..\code\shader.cpp" />
   </ItemGroup>
@@ -188,8 +188,8 @@
     <Text Include="..\to-do.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\code\glsl_loader.h" />
-    <ClInclude Include="..\code\main_header.h" />
+    <ClInclude Include="..\code\text-loader.h" />
+    <ClInclude Include="..\code\main-header.h" />
     <ClInclude Include="..\code\shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
