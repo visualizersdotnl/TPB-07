@@ -1,10 +1,11 @@
 
 /*
-	TPB-07, by The Pimp Brigade
+	TPB-07 
+	by The Pimp Brigade
 
-	I swear that I will:
+	I swear for once that I will:
 	- Not overengineer a single bit
-	- Don't give a fuck about how the code looks
+	- Don't give a fuck about how the code looks (you know you won't keep that promise 100%, right?)
 	- Purely aim for result
 	- We will use a small subset of OpenGL, so all should be fine
 	- OpenGL handles don't seem to be have to released?

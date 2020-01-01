@@ -15,6 +15,9 @@
 #undef main // https://stackoverflow.com/questions/6847360/error-lnk2019-unresolved-external-symbol-main-referenced-in-function-tmainc
 #include "../3rdparty/SDL2-devel-2.0.10-VC/SDL2-2.0.10/include/SDL_opengl.h"
 
+// Std3DMath
+#include "../3rdparty/Std3DMath-01-01-2020/Math.h"
+
 // CRT & STL
 #include <stdint.h>
 #include <math.h>
