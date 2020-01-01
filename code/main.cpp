@@ -3,6 +3,8 @@
 	TPB-07 
 	by The Pimp Brigade
 
+	For Windows, but it should be relatively easy to port to Linux and OSX.
+
 	I swear for once that I will:
 	- Not overengineer a single bit
 	- Don't give a fuck about how the code looks (you know you won't keep that promise 100%, right?)
