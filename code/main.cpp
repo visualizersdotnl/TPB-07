@@ -1,8 +1,7 @@
 
 /*
-	TPB-07
-
-	Yup, OpenGL.
+	TPB-07 ny The Pimp Brigade
+	Yup, OpenGL!
 
 	Shader source links (Shadertoy):
 	- Cracktro: https://www.shadertoy.com/view/Wl33WS
@@ -20,22 +19,9 @@
 	- Purely aim for result
 	- We will use a small subset of OpenGL, so all should be fine
 
-	To do:
-	- Ask Nytrik for some typography graphics
-	- Get 1 single shader to work as GLSL, this will require:
-	  + Loading shader from text, *or*, integrating it as a long string! :)
-	- Implement render targets
-	- Take some time to split the common functionality out of most shaders and stash them in includes
-	- Try to get every shader *but* Trevor's to work
-	- Implement cubemaps and implement Trevor's
-	- Implement basic 2D rendering system
-	- Play some music (BASS)
-	- GNU Rocket integration
-
 	Links with information:
 	  + Cubemaps: https://learnopengl.com/Advanced-OpenGL/Cubemaps
-
-	Author of tiny boilerplate I took: https://github.com/koute
+	  + Author of tiny boilerplate I took: https://github.com/koute
 */
 
 #include "main_header.h"
@@ -97,6 +83,8 @@ typedef enum t_attrib_id
 
 // ---
 
+#if 0
+
 // this was/is a little experiment initiated by one Pieter van der Meer
 // what we've learned that labels are padded so that they, if so desired, fit within
 // the block a branch predictor can use (it used to be 16 bits at a time, generated code suggests as much)
@@ -124,7 +112,9 @@ __declspec(noinline) void looptest()
 	}
 }
 
-//
+#endif
+
+// ---
 
 int main( int argc, char * argv[] )
 {

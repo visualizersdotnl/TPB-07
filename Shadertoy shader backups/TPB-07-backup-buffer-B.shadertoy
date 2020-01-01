@@ -29,6 +29,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
    col.xyz += texture(iChannel0, screenTexCoord + direction * vec2(DISTORTION)).xyz * dist * 0.7;
     
    fragColor = vec4(clamp(col, 0.0, 1.0));
-    
-    
 }

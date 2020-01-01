@@ -1,3 +1,2 @@
 
-Everything, see main.cpp...
-
+List moved to Github repository issues.

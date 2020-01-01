@@ -1,4 +1,6 @@
 
+// ** include first in every source file **
+
 #pragma once
 
 #define _CRT_SECURE_NO_WARNINGS // shut up about those new safer functions

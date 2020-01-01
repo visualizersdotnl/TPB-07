@@ -1,14 +1,12 @@
 
 /*
-	TPB-07 effect
+	TPB-07 effect (base shape)
 
 	by Trevor/PB & Superplek/Bypass
 
-	Note to self (Superplek): study this more carefully and ask Trevor more questions, there's
-	some stuff in here I'd like to know a little more about!
-
 	** note: nothing about this is correct anymore, just fudging numbers left and right **
 */
+
 
 /*
 I just wanted to cache perlin noise aat 1024 x 1042 px, so just inputting a texture is going to be easier

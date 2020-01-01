@@ -1,5 +1,4 @@
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. (https://www.shadertoy.com/view/4d2Xzw)
-// 
+
 // Post proc. by Ravity / Solar
 // Effect by Superplek / Bypass
 // 
@@ -11,7 +10,7 @@
 #define BLUR_ITERATIONS 64
 #define GOLDEN_ANGLE 2.39996
 
-// -- Plek/Trevor's crap --
+// -- Plek/Trevor's stuff --
 
 #define time iTime
 
@@ -141,15 +140,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	vec3 dofColors = col * vec3(mixFlare);
 
 	vec3 finalCol3 = max(dofColors, bokeh)*vignette;
-//	vec3 finalCol3 = fVignette(max(dofColors, bokeh), fragCoord);
     
     // shit film grain (by Trevor :))
     finalCol3 += (h1(vec4(fragCoord.x,fragCoord.y,time,col.z)) - 0.5) * 0.05;
     finalCol3 = 0.4*finalCol3 + 0.6*ACESFilm(finalCol3);
-    
  
     vec4 finalCol4 = vec4(finalCol3, 1.0);
-
     
     fragColor = finalCol4;
 }
