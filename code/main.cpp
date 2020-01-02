@@ -22,8 +22,9 @@
 	- Backup: https://www.shadertoy.com/view/tl3GWf
 	- Always check for latest before using backups, esp. check different radial blur tweaks and assigned buffers
 
-	Ravity's flare shader:
-	- https://www.shadertoy.com/view/3ttGDj?fbclid=IwAR0QaSRCmMIi9xW2XV8hkyXiK0-an-DL8oyl70VEeiTAfoXFc-P-MX09j2Q
+	Ravity's experiments:
+	- Lens flare: https://www.shadertoy.com/view/3ttGDj?fbclid=IwAR0QaSRCmMIi9xW2XV8hkyXiK0-an-DL8oyl70VEeiTAfoXFc-P-MX09j2Q
+	- Spikey thing: https://www.shadertoy.com/view/3td3WX?fbclid=IwAR0kq-CSe6BcKmqIA0cByyMNzLPqgREC1vDmWsnzdH32nT4zFB_6hZWndi4
 
 	Links with potentially useful information:
 	  + Cubemaps and OGL: https://learnopengl.com/Advanced-OpenGL/Cubemaps
