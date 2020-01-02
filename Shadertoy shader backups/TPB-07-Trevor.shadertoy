@@ -1,34 +1,14 @@
 
 /*
-	TPB-07 effect
+	TPB-07 effect: castle / "Trevor's dungeon"
 
-	by Trevor/PB & Superplek/Bypass
-
-	IMPORTANT: optimization needed (esp. buffer A!)
+	Credits:
+	- Trevor
+	- Superplek (add. tweaking)
+	- Various Shadertoy users
 */
 
-/*
-I just wanted to cache perlin noise aat 1024 x 1042 px, so just inputting a texture is going to be easier
-than the cube map mess in iChannel0 and the perlin() function below.
-Also I think I messed up the tiling here, prefereablt the nosie is seamlessly tileable.
-
-With that as a given, all relevant code is below.
-
-The cube map in iChannel1 is an alternative t`o real time reflections but frankly it's not great.
-So if you #define REFLECTIONS iChannel1 is redundant
-*/ 
-
-// -- Misc Plek stuff --
-
-#define GULDEN_SNEDE 1.618
-
 #define time (iTime*0.9)
-
-// One of my own; I derived it from NTSC weights as far as I can remember
-vec3 fDesaturate(vec3 color, float amount)
-{
-    return mix(color, vec3(dot(color, vec3((1.-(0.21+0.71)), 0.21, 0.71))), amount);
-}
 
 // -- Unity logo --
 

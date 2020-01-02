@@ -1,11 +1,15 @@
 
-// Post proc. by Ravity / Solar
-// Effect by Superplek / Bypass
-// 
-// Blur inspired by David Hoskins, flares inspired by John Chapman
-//
-// Effect (backup?) for TPB-07
-// Became a bit of a 2D Burra-style 90s thing
+/*
+	TPB-07 effect: the non-stop Hoplite experience
+
+	Credits:
+	- Superplek
+	- Thorsten
+	- Ravity (post proc.)
+	- Various Shadertoy users
+
+    Blur inspired by David Hoskins, flares inspired by John Chapman
+*/
 
 #define BLUR_ITERATIONS 64
 #define GOLDEN_ANGLE 2.39996
@@ -43,7 +47,7 @@ mat2 fRot(float theta)
     return mat2(cos(theta), sin(theta), -sin(theta), cos(theta));
 }
 
-// hash functions
+// Hash functions (for noise)
 vec4 h4(vec4 p4)
 {
 	p4 = fract(p4 * vec4(.1031, .1030, .0973, .1099));

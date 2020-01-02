@@ -1,13 +1,12 @@
 
 /*
-    TPB-07 effect
+    TPB-07 effect: caged metaballs
 
-    Big ups to:
-    - Mercury (HG_SDF)
-    - Trevor/PB
-    - Thorsten/Purple
-
-    I *should* at some point make a common library, but for TPB-07 this will have to do.
+	Credits:
+	- Superplek
+	- Mercury (HG_SF) + various Shadertoy users
+	- TropicalTrevor
+	- IQ
 */
 
 // -- Defines --
@@ -25,7 +24,7 @@
 #define AO_ITER 8
 
 // Shadertoy-specific (FIXME: add iResolution!)
-#define time (iTime*1.2)
+#define time (iTime*1.1)
 
 // -- Function(s) taken from HG_SDF --
 

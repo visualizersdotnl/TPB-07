@@ -21,18 +21,6 @@
     <Filter Include="/code\/shaders">
       <UniqueIdentifier>{b762f857-eb78-4225-a9cf-e55e0674a928}</UniqueIdentifier>
     </Filter>
-    <Filter Include="/Shadertoy backups\Backup">
-      <UniqueIdentifier>{f39aa602-26fe-4328-8f36-6f0e892ea893}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="/Shadertoy backups\Melting cubes">
-      <UniqueIdentifier>{62dc9334-834a-4f52-ae67-6b9d621fd2d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="/Shadertoy backups\Trevor%27s dungeon">
-      <UniqueIdentifier>{d852f682-af54-42b9-9dfd-1d3af8a67986}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="/Shadertoy backups\Caged metaballs">
-      <UniqueIdentifier>{62f49ca6-0736-48df-a595-aefb7187afe7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="/Shadertoy backups\Radial blur %28common%29">
       <UniqueIdentifier>{9db87ff8-25f4-446d-a39d-9f11cbd4f097}</UniqueIdentifier>
     </Filter>
@@ -41,6 +29,18 @@
     </Filter>
     <Filter Include="/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020">
       <UniqueIdentifier>{9f8f586b-6ad5-4541-8865-e2b78e5f675f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="/Shadertoy backups\Melting cubes %28cleaned up%29">
+      <UniqueIdentifier>{62dc9334-834a-4f52-ae67-6b9d621fd2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="/Shadertoy backups\Caged metaballs %28cleaned up%29">
+      <UniqueIdentifier>{62f49ca6-0736-48df-a595-aefb7187afe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="/Shadertoy backups\Backup %28cleaned up%29">
+      <UniqueIdentifier>{f39aa602-26fe-4328-8f36-6f0e892ea893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="/Shadertoy backups\Trevor%27s dungeon %28still a bit messy%29">
+      <UniqueIdentifier>{d852f682-af54-42b9-9dfd-1d3af8a67986}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,37 +80,37 @@
       <Filter>Notes</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-backup.shadertoy">
-      <Filter>/Shadertoy backups\Backup</Filter>
+      <Filter>/Shadertoy backups\Backup %28cleaned up%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-A.shadertoy">
-      <Filter>/Shadertoy backups\Backup</Filter>
+      <Filter>/Shadertoy backups\Backup %28cleaned up%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-B.shadertoy">
-      <Filter>/Shadertoy backups\Backup</Filter>
+      <Filter>/Shadertoy backups\Backup %28cleaned up%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-backup-buffer-C.shadertoy">
-      <Filter>/Shadertoy backups\Backup</Filter>
+      <Filter>/Shadertoy backups\Backup %28cleaned up%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Melting-cubes-buffer-A.shadertoy">
-      <Filter>/Shadertoy backups\Melting cubes</Filter>
+      <Filter>/Shadertoy backups\Melting cubes %28cleaned up%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Radial-blur.shadertoy">
       <Filter>/Shadertoy backups\Radial blur %28common%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor.shadertoy">
-      <Filter>/Shadertoy backups\Trevor%27s dungeon</Filter>
+      <Filter>/Shadertoy backups\Trevor%27s dungeon %28still a bit messy%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor-buffer-A.shadertoy">
-      <Filter>/Shadertoy backups\Trevor%27s dungeon</Filter>
+      <Filter>/Shadertoy backups\Trevor%27s dungeon %28still a bit messy%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor-common.shadertoy">
-      <Filter>/Shadertoy backups\Trevor%27s dungeon</Filter>
+      <Filter>/Shadertoy backups\Trevor%27s dungeon %28still a bit messy%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-07-Trevor-cubemap.shadertoy">
-      <Filter>/Shadertoy backups\Trevor%27s dungeon</Filter>
+      <Filter>/Shadertoy backups\Trevor%27s dungeon %28still a bit messy%29</Filter>
     </None>
     <None Include="..\Shadertoy shader backups\TPB-Metaballs-buffer-A.shadertoy">
-      <Filter>/Shadertoy backups\Caged metaballs</Filter>
+      <Filter>/Shadertoy backups\Caged metaballs %28cleaned up%29</Filter>
     </None>
     <None Include="..\3rdparty\Std3DMath-01-01-2020\LICENSE">
       <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>

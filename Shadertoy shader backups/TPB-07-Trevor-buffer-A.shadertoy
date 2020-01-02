@@ -1,25 +1,12 @@
 
 /*
-	TPB-07 effect (base shape)
+	TPB-07 effect: Trevor's dungeon (shape)
 
-	by Trevor/PB & Superplek/Bypass
-
-	** note: nothing about this is correct anymore, just fudging numbers left and right **
+	This code is "a bit of a mess", but no effort will be made to clean it up.
+	It does however beg for some speed optimization down the line.
 */
 
-
-/*
-I just wanted to cache perlin noise aat 1024 x 1042 px, so just inputting a texture is going to be easier
-than the cube map mess in iChannel0 and the perlin() function below.
-Also I think I messed up the tiling here, prefereablt the nosie is seamlessly tileable.
-
-With that as a given, all relevant code is below.
-
-The cube map in iChannel1 is an alternative t`o real time reflections but frankly it's not great.
-So if you #define REFLECTIONS iChannel1 is redundant
-*/ 
-
-// -- Misc Plek stuff --
+// -- <Misc. Superplek stuff> --
 
 #define GULDEN_SNEDE 1.618
 
@@ -30,6 +17,8 @@ vec3 fDesaturate(vec3 color, float amount)
 {
     return mix(color, vec3(dot(color, vec3((1.-(0.21+0.71)), 0.21, 0.71))), amount);
 }
+
+// -- </Misc. Superplek stuff> --
 
 #define REFLECTIONS
 #define FAR 30.0

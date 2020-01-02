@@ -2,12 +2,11 @@
 /*
     TPB-07 effect
 
-    Big ups to:
-    - Mercury (HG_SDF)
+	Credits:
+	- Superplek
+    - Mercury (HG_SDF) + various Shadertoy users
     - Trevor/PB
-    - Thorsten/Purple
-
-    I *should* at some point make a common library, but for TPB-07 this will have to do.
+	- IQ
 */
 
 // -- Defines --
@@ -405,7 +404,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         
         // Tone mapping
         color = fDesaturate(color, 1.414); // Overdo it to get a nice gold and blue-ish hue
-        color = .66*ACESFilm(color) + .44*color;
+        color = .66*ACESFilm(color) + .43*color;
     }
     
     // Add Unity logo, deal with 'em!
