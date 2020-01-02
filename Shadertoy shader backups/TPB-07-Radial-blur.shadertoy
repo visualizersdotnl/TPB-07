@@ -8,7 +8,54 @@
 	FIXME: write a proper one!
 */
 
+// -- Misc. --
+
 #define time iTime
+
+mat2 fRot(float theta)
+{
+    return mat2(cos(theta), sin(theta), -sin(theta), cos(theta));
+}
+
+
+// -- Unity logo --
+
+// Source: https://www.shadertoy.com/view/ld3XDse 
+// Edited it to rotate and scale to a corner for this specific shader.
+
+float a(vec2 uv)
+{
+    uv.y = abs(uv.y);
+    vec4 ss = vec4(uv.xy, .11, .79) - uv.yxyy + vec4(1.5,-1.2,0,0);
+    return min(min(min(ss.x,ss.w),-uv.x),max(ss.y,ss.z));
+}
+
+vec4 fUnityLogo(in vec2 fragCoord)
+{
+    mat2 mrot = fRot(time*0.3);
+    vec2 uv = (fragCoord - iResolution.xy*0.5) * 16. / iResolution.y,
+         sup = vec2(-.5, .866),
+         supo = vec2(.866, .5);
+    
+    // EDIT: move to corner
+    uv.x -= 12.;
+    uv.y -= 6.;
+            
+    // improved s by Fabrice! Thanx!
+    // EDIT: added rotation
+    float s = max(a(mrot*uv),max(a(mrot*uv*mat2(-.5,.866,.866,.5)),a(-mrot*uv*mat2(.5,.866,.866,-.5))));
+
+    float logo = smoothstep(-fwidth(uv.x)*1.9,.0,s)*0.7;
+    vec4 col = vec4(.13,.17,.22,logo) + logo; 
+
+    float i = smoothstep(.5,1.,sin(time*2.7 + uv.x + uv.y));
+    
+    // EDIT: made it much brighter
+    col *= 0.9+(vec4(1)*s*.2+0.2*i);
+   
+    return clamp(col,.0,1.);
+}
+
 
 /*
 	Full Scene Radial Blur
@@ -77,9 +124,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec2 uv = fragCoord.xy / iResolution.xy;
 
     // EDIT
-    float decay = 0.91;
+    float decay = 0.94;
     float density = 0.314;
-    float weight = 0.07; 
+    float weight = 0.1;  
 
     // Light offset. Kind of fake. See above.
     vec3 l = lOff();
@@ -128,7 +175,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     // EDIT: blend in original, make things a bit more subtle
     vec4 origColor = (texture(iChannel0, fragCoord.xy / iResolution.xy));
-    color = origColor*0.7 + color*0.3;
-    
+    color = origColor*0.7 + color*0.4;
+
+    // Add Unity logo, deal with 'em!
+    vec4 unity = fUnityLogo(fragCoord.xy);
+    color = mix(color, unity, unity.w);
+    color.z += unity.w*0.328;
+
 	fragColor = color;
 }

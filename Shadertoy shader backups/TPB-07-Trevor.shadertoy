@@ -8,12 +8,9 @@
 	- Various Shadertoy users
 */
 
+// -- Misc. --
+
 #define time (iTime*0.9)
-
-// -- Unity logo --
-
-// Source: https://www.shadertoy.com/view/ld3XDse 
-// Edited it to rotate and scale to a corner for this specific shader.
 
 mat2 fRot(float theta)
 {
@@ -26,6 +23,11 @@ float a(vec2 uv)
     vec4 ss = vec4(uv.xy, .11, .79) - uv.yxyy + vec4(1.5,-1.2,0,0);
     return min(min(min(ss.x,ss.w),-uv.x),max(ss.y,ss.z));
 }
+
+// -- Unity logo --
+
+// Source: https://www.shadertoy.com/view/ld3XDse 
+// Edited it to rotate and scale to a corner for this specific shader.
 
 vec4 fUnityLogo(in vec2 fragCoord)
 {
@@ -53,7 +55,7 @@ vec4 fUnityLogo(in vec2 fragCoord)
     return clamp(col,.0,1.);
 }
 
-// -- Unity logo --
+// -- Tone mapping --
 
 #define sat(x) clamp(x,0.0,1.0)
 
@@ -75,6 +77,8 @@ vec3 LinearToSRGB(vec3 rgb)
     return max(1.055*pow(rgb,vec3(0.416666667))-0.055,0.0);
 }
 
+// -- Main --
+
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
     vec3 cd = texelFetch(iChannel0, ivec2(fragCoord), 0).xyz;
@@ -90,17 +94,17 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     // shit film grain
     cd += (h1(fragCoord + time) - 0.5) * 0.03;
     
-    // Add Unity logo, deal with 'em!
-    vec4 unity = fUnityLogo(fragCoord.xy);
-    cd = mix(cd, unity.xyz, unity.w);
-    cd.z += unity.w*0.328;
-
     // vignette
     vec2 uv = fragCoord/iResolution.xy;
     uv *=  1.0 - uv.yx;
     float vig = uv.x*uv.y * 25.0;
     vig = sat(pow(vig,0.25));
 	cd *= vig;
-    
+
+    // Add Unity logo, deal with 'em!
+    vec4 unity = fUnityLogo(fragCoord.xy);
+    cd = mix(cd, unity.xyz, unity.w);
+    cd.z += unity.w*0.328;
+
     fragColor = vec4(cd,1.0);
 }

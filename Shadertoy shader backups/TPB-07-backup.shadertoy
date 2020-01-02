@@ -9,6 +9,7 @@
 	- Various Shadertoy users
 
     Blur inspired by David Hoskins, flares inspired by John Chapman
+    Effect (backup?) for TPB-07
 */
 
 #define BLUR_ITERATIONS 64
@@ -136,11 +137,6 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
                     texture(iChannel0, uv).g,
                     texture(iChannel0, uv + aberrated).b);
 
-    // Add Unity logo, deal with 'em!
-    vec4 unity = fUnityLogo(fragCoord.xy);
-    col = mix(col, unity.xyz, unity.w);
-    col.z += unity.w*0.328;
-
 	vec3 dofColors = col * vec3(mixFlare);
 
 	vec3 finalCol3 = max(dofColors, bokeh)*vignette;
@@ -150,6 +146,11 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     finalCol3 = 0.4*finalCol3 + 0.6*ACESFilm(finalCol3);
  
     vec4 finalCol4 = vec4(finalCol3, 1.0);
-    
+
+    // Add Unity logo, deal with 'em!
+    vec4 unity = fUnityLogo(fragCoord.xy);
+    finalCol4 = mix(finalCol4, unity, unity.w);
+    finalCol4.z += unity.w*0.214;
+
     fragColor = finalCol4;
 }
