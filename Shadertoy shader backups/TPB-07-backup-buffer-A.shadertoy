@@ -46,7 +46,9 @@ mat2 fRot(float theta)
 float laura(vec3 p)
 {
     float cosgrid = cos(p.x)+cos(p.y*0.8)+cos(p.z);
-    
+    return cosgrid;
+
+/*    
     // ** this was in the plans but now that I look at it, well, doesn't do a whole lot of good **
     // Blobs (optional, just remember p-offset, like with normals, then 1/dist per axis)
     vec3 dx = p-vec3(1.,0.3*cos(time*0.5),0.);
@@ -56,8 +58,9 @@ float laura(vec3 p)
     float by = 0.8/length(dy);
     float bz = 0.8/length(dz);
     
-    float result = cosgrid+bx*by*bz; // GRID+X*Y+Z = GOOD!
+    float result = cosgrid+bx*by*bz;
     return result;
+*/
 }
 
 mat2 laurarot(float theta)
