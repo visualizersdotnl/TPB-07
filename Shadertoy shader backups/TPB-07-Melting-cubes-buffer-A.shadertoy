@@ -366,7 +366,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         
         // Tone mapping
         color = fDesaturate(color, 1.414); // Overdo it to get a nice gold and blue-ish hue
-        color = .66*ACESFilm(color) + .43*color;
+        color = .66*ACESFilm(color) + .63*color;
     }
     
     // Vignette
