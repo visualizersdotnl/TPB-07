@@ -1,0 +1,47 @@
+
+------------------------------
+TPB-07: TPB-07 (party version)
+------------------------------
+
+At an 0-2 disadvantage we're all but ready to throw in the towel.
+
+** System req. **
+
+- OpenGL 3.x, I guess?
+- 64-bit Windows 10 (tested)
+- nVidia 1080 GTX, though a bit less should do as well
+- A functional primary audio device.
+
+Demo will automatically adapt to your current output slash desktop
+resolution and adjust accordingly (aspect ratio), but you'll be well
+advised to use something near 16:9.
+
+It is built for 1080p.
+You can also use the windowed version which runs in 720p.
+
+OpenGL sucks, but I tried to spit out sensible error messages.
+If you run into any trouble, e-mail me (ndewit@gmail.com) with your specifications. 
+Otherwise it will appear on Youtube soon.
+
+** Credits **
+
+Programming & Visuals:
+  Superplek, TropicalTrevor, Ravity/Solar
+
+2D:
+  Alien, Nytrik
+
+Soundtrack:
+  Dascon/Deadliners
+
+Rocket editing a.k.a synchronisation:
+  All of us.
+
+
+We use Rocket by Kusma & Skrebbel and BASS by Ian Luck.
+
+
+TPB-08 next? Time will tell.
+
+Thank you,
+  Superplek/Bypass,

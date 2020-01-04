@@ -1,12 +1,4 @@
 
-# VS2017
-/VS2017/x64
-/VS2017/*.user
-/VS2017/.vs
-/target-x64/*.ilk
-/target-x64/*.pdb
-/target-x64/*.exe
-
 # Prerequisites
 *.d
 
@@ -41,3 +33,13 @@
 *.app
 *.iobj
 *.ipdb
+
+# VS2017
+/VS2017/x64
+/VS2017/*.user
+/VS2017/.vs
+/target-x64/*.ilk
+/target-x64/*.pdb
+/target-x64/*.exe
+!/target-x64/*.dll
+
