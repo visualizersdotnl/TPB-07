@@ -42,6 +42,9 @@
     <Filter Include="/Shadertoy backups\Trevor%27s dungeon %28still a bit messy%29">
       <UniqueIdentifier>{d852f682-af54-42b9-9dfd-1d3af8a67986}</UniqueIdentifier>
     </Filter>
+    <Filter Include="/Shadertoy backups\Unity %28semi-clean%29">
+      <UniqueIdentifier>{eefa7e55-19dd-4d7c-aa44-e1f524564006}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\code\main.cpp">
@@ -117,6 +120,15 @@
     </None>
     <None Include="..\3rdparty\Std3DMath-01-01-2020\README.md">
       <Filter>/3rdparty libraries %28x64 only%29\/Std3DMath-01-01-2020</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Unity.shadertoy">
+      <Filter>/Shadertoy backups\Unity %28semi-clean%29</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Unity-buffer-A.shadertoy">
+      <Filter>/Shadertoy backups\Unity %28semi-clean%29</Filter>
+    </None>
+    <None Include="..\Shadertoy shader backups\TPB-07-Unity-buffer-B.shadertoy">
+      <Filter>/Shadertoy backups\Unity %28semi-clean%29</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
